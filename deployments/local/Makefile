@@ -22,3 +22,5 @@ reset-minio:
 reset-db:
 	sudo rm -rf $(MAKEFILE_DIR)/.volumes/lordes-postgres
 	sudo mkdir -p $(MAKEFILE_DIR)/.volumes/lordes-postgres
+
+restart-all: reset-minio reset-db
