@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 @SpringBootApplication
 @Slf4j
-//@SpringBootApplication(exclude = { DataSourceAutoConfiguration.class }) //ToDo:REMOVE
 public class FakeRestaurantBeApplication {
 
     public static void main(String[] args) {

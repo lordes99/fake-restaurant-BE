@@ -1,0 +1,5 @@
+package systems.lordes.server.config;
+
+public interface Profiles {
+    String SECURITY_DISABLED_PROFILE = "security-disabled";
+}
