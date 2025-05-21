@@ -36,6 +36,7 @@ services:
     ports:
       #- "9000:9000"
       - "127.0.0.1:9001:9001"
+      - "127.0.0.1:9000:9000"
     volumes:
       - ./.volumes/minio:/data
     networks:
@@ -49,6 +50,22 @@ services:
       MINIO_ROOT_PASSWORD: minioadmin-local
 
     command: server --console-address ":9001" /data
+
+  minio-init:
+    image: minio/mc
+    depends_on:
+      - minio
+    networks:
+      - lordes-net
+    entrypoint: >
+      /bin/sh -c "
+      sleep 10 &&
+      mc alias set localminio http://minio:9000 minioadmin minioadmin-local &&
+      mc ls localminio/fake-restaurant || mc mb localminio/fake-restaurant &&
+      for folder in users restaurants reviews; do
+        mc ls localminio/fake-restaurant/${folder}/.keep || echo placeholder | mc pipe localminio/fake-restaurant/${folder}/.keep;
+      done
+      "
 
 networks:
   lordes-net:
