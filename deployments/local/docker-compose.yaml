@@ -1,0 +1,54 @@
+version: '3.4'
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      - POSTGRES_USER=lordes
+      - POSTGRES_PASSWORD=lordes
+      - POSTGRES_DB=lordes
+    volumes:
+      - ./.volumes/lordes-postgres:/var/lib/postgresql/data
+    networks:
+      - lordes-net
+    expose:
+      - 5432
+    ports:
+      - "127.0.0.1:5455:5432"
+    healthcheck:
+      test: timeout 5 bash -c 'cat < /dev/null > /dev/tcp/localhost/5432'
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1k"
+        max-file: "3"
+
+  minio:
+    image: minio/minio:RELEASE.2025-02-18T16-25-55Z
+    expose:
+      # API Port
+      - 9000
+      # Console Port
+      - 9001
+    ports:
+      #- "9000:9000"
+      - "127.0.0.1:9001:9001"
+    volumes:
+      - ./.volumes/minio:/data
+    networks:
+      - lordes-net
+    environment:
+      # Console only accessible to local development
+      MINIO_BROWSER_REDIRECT_URL: "http://storage.lordes.localhost:9001"
+      # It may be required on HTTPS configurations
+      #MINIO_SERVER_URL: "http://storage.lordes.localhost"
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin-local
+
+    command: server --console-address ":9001" /data
+
+networks:
+  lordes-net:
