@@ -6,7 +6,7 @@ services:
     environment:
       - POSTGRES_USER=lordes
       - POSTGRES_PASSWORD=lordes
-      - POSTGRES_DB=lordes
+      - POSTGRES_DB=fake-restaurant
     volumes:
       - ./.volumes/lordes-postgres:/var/lib/postgresql/data
     networks:
