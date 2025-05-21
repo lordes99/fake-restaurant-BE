@@ -1,0 +1,123 @@
+import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
+
+buildscript {
+    ext {
+        revHypersistance = '3.7.6'
+        revMapStruct = '1.5.5.Final'
+    }
+}
+
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.5'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id "org.openapi.generator" version "7.11.0"
+}
+
+group = 'systems.lordes'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(23)
+    }
+    sourceCompatibility = JavaVersion.VERSION_23
+    targetCompatibility = JavaVersion.VERSION_23
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    set('openapitoolsJacksonVersion', "0.2.6")
+    set('minioVersion', "8.5.17")
+}
+
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    //implementation 'org.springframework.boot:spring-boot-starter-quartz'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    annotationProcessor "org.mapstruct:mapstruct-processor:${revMapStruct}"
+    implementation "org.mapstruct:mapstruct:${revMapStruct}"
+
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-database-postgresql'
+    runtimeOnly 'org.postgresql:postgresql'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.projectlombok:lombok'
+    implementation "com.fasterxml.jackson.module:jackson-module-blackbird"
+    implementation 'jakarta.validation:jakarta.validation-api'
+    implementation "org.openapitools:jackson-databind-nullable:${openapitoolsJacksonVersion}"
+    implementation "io.hypersistence:hypersistence-utils-hibernate-63:${revHypersistance}"
+    implementation "io.minio:minio:${minioVersion}"
+
+//    implementation 'org.keycloak:keycloak-admin-client:26.0.2'
+
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+tasks.register('openapiGenerateServer', GenerateTask) {
+    generatorName.set("spring")
+    // TODO to use classpath in JAR
+    inputSpec = "$projectDir/src/main/resources/fake-restaurant.openapi.yaml"
+    outputDir = "$projectDir/build/generated/openapi"
+
+    // Add public as task dependency for correct change detection of included dep
+    //	inputs.file "$projectDir/src/main/resources/included-dep.openapi.yaml"
+
+    packageName = "systems.lordes.server.gen"
+    apiPackage = "systems.lordes.server.gen.controller"
+    modelPackage = "systems.lordes.server.gen.api"
+
+    generateApiDocumentation = false
+    generateModelTests = false
+
+    ignoreFileOverride = "$projectDir/.openapi-generator-ignore"
+    configOptions.put("documentationProvider", "none")
+    configOptions.put("dateLibrary", "java8")
+    configOptions.put("interfaceOnly", "true")
+    configOptions.put("useJakartaEe", "true")
+    configOptions.put("skipDefaultInterface", "true")
+    configOptions.put("serializableModel", "true")
+
+    typeMappings.put("ObjectNode", "com.fasterxml.jackson.databind.node.ObjectNode")
+    typeMappings.put("JsonNode", "com.fasterxml.jackson.databind.JsonNode")
+    typeMappings.put("InstantDateTimeReadOnly", "java.time.Instant")
+    typeMappings.put("InstantDateTime", "java.time.Instant")
+    typeMappings.put("ZonedDateTime", "java.time.ZonedDateTime")
+
+}
+
+tasks.compileJava {
+    dependsOn (
+            tasks.openapiGenerateServer,
+    )
+}
+
+sourceSets {
+    main {
+        java.srcDirs += "$buildDir/generated/openapi/src/main/java"
+    }
+}
+
