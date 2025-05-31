@@ -15,7 +15,8 @@ import java.util.UUID;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "user_entities", indexes = {
 //    @Index(name = "idx_userentities_sso", columnList = "ssoSubjectId", unique = true),
