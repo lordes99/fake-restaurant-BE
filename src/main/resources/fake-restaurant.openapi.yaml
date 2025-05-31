@@ -135,6 +135,10 @@ components:
 
     User:
       type: object
+      required:
+        - id
+        - name
+        - email
       properties:
         id:
           $ref: "#/components/schemas/UUIDReference"
