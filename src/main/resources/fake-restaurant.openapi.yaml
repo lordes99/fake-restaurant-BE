@@ -8,6 +8,44 @@ tags:
   - name: Managing API
   - name: Project API
 paths:
+  /public/login:
+    post:
+      tags:
+        - Managing API
+      operationId: LoginPost
+      summary: Login user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        200:
+          description: Token JWT
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+
+  /public/register:
+    post:
+      tags:
+        - Managing API
+      operationId: RegisterPost
+      summary: Register user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        200:
+          description: Token JWT
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
   /users:
     post:
       security:
@@ -244,5 +282,17 @@ components:
       format: uuid
       readOnly: true
 
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
 
+    TokenResponse:
+      type: object
+      properties:
+        token:
+          type: string
 

@@ -38,6 +38,7 @@ repositories {
 ext {
     set('openapitoolsJacksonVersion', "0.2.6")
     set('minioVersion', "8.5.17")
+    set('jwtVersion', '0.12.6')
 }
 
 
@@ -68,6 +69,10 @@ dependencies {
     implementation "org.openapitools:jackson-databind-nullable:${openapitoolsJacksonVersion}"
     implementation "io.hypersistence:hypersistence-utils-hibernate-63:${revHypersistance}"
     implementation "io.minio:minio:${minioVersion}"
+
+    implementation "io.jsonwebtoken:jjwt-api:${jwtVersion}"
+    runtimeOnly "io.jsonwebtoken:jjwt-impl:${jwtVersion}"
+    runtimeOnly "io.jsonwebtoken:jjwt-jackson:${jwtVersion}"
 
 //    implementation 'org.keycloak:keycloak-admin-client:26.0.2'
 
