@@ -7,7 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 public class ControllerUtils {
 
     public final static String PREFIX_API_V1 = "/api/v1";
-    private static final Integer FIRST_PAGE = 1;
+    private static final Integer FIRST_PAGE = 0;
     private static final Integer DEFAULT_PAGE_SIZE = 20;
     private static final Integer MAX_PAGE_SIZE = 50;
 

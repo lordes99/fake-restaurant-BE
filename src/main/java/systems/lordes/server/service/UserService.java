@@ -2,6 +2,7 @@ package systems.lordes.server.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import systems.lordes.server.data.UserData;
+import systems.lordes.server.data.UsersPageData;
 import systems.lordes.server.entity.UserEntity;
 import systems.lordes.server.gen.api.User;
 import systems.lordes.server.mapper.UserMapper;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -84,17 +86,17 @@ public class UserService {
 //    }
 
     @Transactional(readOnly = true)
-    public Page<User> findUsers(PageRequest pageRequest, UUID organizationId) {
-//        Page<UserEntity> results;
-//
-//        results = userRepository.findAll(pageRequest);
-//
-//        return results.map(userMapper::toApi);
-        throw new RuntimeException("Not implemented yet");
+    public List<UserData> findUsers() {
+        return userMapper.toData(userRepository.findAll());
+    }
+
+    @Transactional(readOnly = true)
+    public UsersPageData findUsers(PageRequest pageRequest) {
+        return userMapper.toData(userRepository.findAll(pageRequest));
     }
 
     public User getUserById(UUID id) {
-        return null;
+        throw new RuntimeException("Not implemented yet");
     }
 
     public Optional<UserData> getUserByEmail(String email) {
@@ -106,7 +108,7 @@ public class UserService {
     }
 
     public User modifyUser(User user) {
-        return null;
+        throw new RuntimeException("Not implemented yet");
     }
 
     public UserData createUser(User user) {
