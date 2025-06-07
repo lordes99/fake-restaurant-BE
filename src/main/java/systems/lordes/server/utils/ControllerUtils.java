@@ -3,6 +3,7 @@ package systems.lordes.server.utils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import systems.lordes.server.data.CustomUserDetails;
 
 public class ControllerUtils {
 
@@ -11,8 +12,8 @@ public class ControllerUtils {
     private static final Integer DEFAULT_PAGE_SIZE = 20;
     private static final Integer MAX_PAGE_SIZE = 50;
 
-    public static Object getPrincipalSession() {
-        return getPrincipal().getPrincipal();
+    public static CustomUserDetails getPrincipalSession() {
+        return (CustomUserDetails) getPrincipal().getPrincipal();
     }
 
     public static Authentication getPrincipal() {

@@ -1,20 +1,17 @@
 package systems.lordes.server.controller;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
-import systems.lordes.server.gen.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import systems.lordes.server.gen.api.User;
+import systems.lordes.server.gen.api.UsersPage;
 import systems.lordes.server.gen.controller.UserApi;
 import systems.lordes.server.gen.controller.UsersApi;
 import systems.lordes.server.mapper.UserMapper;
 import systems.lordes.server.service.UserService;
 import systems.lordes.server.utils.ControllerUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.web.PagedModel;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.UUID;
@@ -37,7 +34,7 @@ public class UserController implements UsersApi, UserApi {
 
     @Override
     public ResponseEntity<UsersPage> usersGet(Integer page, Integer size) {
-        ControllerUtils.getPrincipal();
+        User loggedUser = userMapper.toApi(ControllerUtils.getPrincipalSession());
 
         UsersPage users;
         if ((page == null || page < 1) && (size == null || size < 1)) {
