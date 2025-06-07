@@ -67,6 +67,8 @@ paths:
               schema:
                 type: string
                 format: uuid
+        401:
+          $ref: '#/components/responses/Unauthorized_401'
     get:
       parameters:
         - $ref: '#/components/parameters/PageQueryParam'
@@ -86,6 +88,8 @@ paths:
                       $ref: "#/components/schemas/User"
                   page:
                     $ref: "#/components/schemas/Page"
+        401:
+          $ref: '#/components/responses/Unauthorized_401'
   /user/{id}:
     parameters:
       - $ref: '#/components/parameters/UUIDParamPath'
@@ -103,6 +107,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        401:
+          $ref: '#/components/responses/Unauthorized_401'
     post:
       security:
         - bearerAuth: [ ]
@@ -124,6 +130,14 @@ paths:
                 $ref: '#/components/schemas/User'
 
 components:
+  responses:
+    Unauthorized_401:
+      description: Unauthorized_401
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
   parameters:
     PageQueryParam:
       in: query
@@ -306,3 +320,8 @@ components:
         token:
           type: string
 
+    Error:
+      type: object
+      properties:
+        message:
+          type: string

@@ -2,9 +2,12 @@ package systems.lordes.server.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import systems.lordes.server.gen.api.Error;
+import systems.lordes.server.gen.api.Role;
 import systems.lordes.server.gen.api.User;
 import systems.lordes.server.gen.api.UsersPage;
 import systems.lordes.server.gen.controller.UserApi;
@@ -35,6 +38,10 @@ public class UserController implements UsersApi, UserApi {
     @Override
     public ResponseEntity<UsersPage> usersGet(Integer page, Integer size) {
         User loggedUser = userMapper.toApi(ControllerUtils.getPrincipalSession());
+        if (loggedUser == null || !Role.ADMIN.equals(loggedUser.getRole())) {
+            Error error = new Error().message("Access denied: unauthorized user");
+            return (ResponseEntity) ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+        }
 
         UsersPage users;
         if ((page == null || page < 1) && (size == null || size < 1)) {
