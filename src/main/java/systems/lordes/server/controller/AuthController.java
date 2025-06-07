@@ -51,7 +51,8 @@ public class AuthController implements PublicApi {
         );
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        String token = jwtService.generateToken(userDetails);
+        User user = userMapper.toApi(userDetails);
+        String token = jwtService.generateToken(user);
 
         return ResponseEntity.ok(new TokenResponse().token(token));
     }

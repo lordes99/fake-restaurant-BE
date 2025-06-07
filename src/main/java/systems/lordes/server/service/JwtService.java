@@ -1,34 +1,34 @@
 package systems.lordes.server.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import systems.lordes.server.config.FakeRestaurantProperties;
-import systems.lordes.server.data.CustomUserDetails;
+import systems.lordes.server.gen.api.User;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
 @Service
 public class JwtService {
     private final String secretKey;
+    private final ObjectMapper objectMapper;
 
     @Autowired
     public JwtService(
-            FakeRestaurantProperties fakeRestaurantProperties
+            FakeRestaurantProperties fakeRestaurantProperties,
+            ObjectMapper objectMapper
     ) {
         this.secretKey = fakeRestaurantProperties.getSecretJwtKey();
+        this.objectMapper = objectMapper;
     }
-
-//    private final String SECRET_KEY = "918b0e0aa67bb3d8168a9ac79c57bd054cbf6b4f10994899e4f431ae1679bf4bf49d63dcb9cc6d3a5510c1a508c657b18f0c82b10cc80c487bc86ca6a9cd466b";
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -39,18 +39,14 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(CustomUserDetails userDetails) {
-        Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put("id", userDetails.getId());
-        extraClaims.put("email", userDetails.getUsername());
-        extraClaims.put("name", userDetails.getName());
-        extraClaims.put("surname", userDetails.getSurname());
+    public String generateToken(User user) {
+        Map<String, Object> extraClaims = objectMapper.convertValue(user, Map.class);
 
         return Jwts.builder()
                 .claims(extraClaims)
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
+                .subject(user.getEmail())
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
                 .signWith(getSignInKey())
                 .compact();
     }
@@ -72,8 +68,8 @@ public class JwtService {
         return Jwts.parser()
                 .setSigningKey(getSignInKey())
                 .build()
-                .parseClaimsJws(token)
-                .getBody();
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
     private Key getSignInKey() {
