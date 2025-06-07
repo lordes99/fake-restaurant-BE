@@ -4,6 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import org.springframework.data.domain.Page;
+import systems.lordes.server.data.CustomUserDetails;
 import systems.lordes.server.data.UserData;
 import systems.lordes.server.data.UsersPageData;
 import systems.lordes.server.entity.UserEntity;
@@ -17,6 +18,12 @@ import java.util.List;
 public interface UserMapper {
 
     User toApi(UserData user);
+
+    @Mapping(target = "email", source = "username")
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "password", ignore = true)
+    User toApi(CustomUserDetails user);
 
     @Mapping(target = "id", source = "id")
     @Mapping(target = "name", source = "name")
