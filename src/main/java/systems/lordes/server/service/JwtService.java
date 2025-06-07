@@ -10,15 +10,18 @@ import org.springframework.stereotype.Service;
 import systems.lordes.server.config.FakeRestaurantProperties;
 import systems.lordes.server.gen.api.User;
 
+import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.security.Key;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Date;
 import java.util.Map;
 import java.util.function.Function;
 
 @Service
 public class JwtService {
-    private final String secretKey;
+    private final SecretKey secretKey;
+    private final Long jwtExpiration;
     private final ObjectMapper objectMapper;
 
     @Autowired
@@ -26,7 +29,8 @@ public class JwtService {
             FakeRestaurantProperties fakeRestaurantProperties,
             ObjectMapper objectMapper
     ) {
-        this.secretKey = fakeRestaurantProperties.getSecretJwtKey();
+        this.secretKey = Keys.hmacShaKeyFor(fakeRestaurantProperties.getSecretJwtKey().getBytes(StandardCharsets.UTF_8));
+        this.jwtExpiration = fakeRestaurantProperties.getJwtExpiration();
         this.objectMapper = objectMapper;
     }
 
@@ -40,14 +44,17 @@ public class JwtService {
     }
 
     public String generateToken(User user) {
+        Instant now = Instant.now();
+        Instant expiry = now.plus(Duration.ofMillis(jwtExpiration));
+
         Map<String, Object> extraClaims = objectMapper.convertValue(user, Map.class);
 
         return Jwts.builder()
                 .claims(extraClaims)
                 .subject(user.getEmail())
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
-                .signWith(getSignInKey())
+                .issuedAt(Date.from(now))
+                .expiration(Date.from(expiry))
+                .signWith(secretKey)
                 .compact();
     }
 
@@ -66,14 +73,9 @@ public class JwtService {
 
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
-                .setSigningKey(getSignInKey())
+                .verifyWith(secretKey)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-    }
-
-    private Key getSignInKey() {
-        byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
-        return Keys.hmacShaKeyFor(keyBytes);
     }
 }
