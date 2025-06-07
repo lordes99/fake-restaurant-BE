@@ -176,7 +176,9 @@ components:
       required:
         - id
         - name
+        - surname
         - email
+        - role
       properties:
         id:
           $ref: "#/components/schemas/UUIDReference"
@@ -186,6 +188,8 @@ components:
           type: string
         email:
           type: string
+        role:
+          $ref: '#/components/schemas/Role'
         password:
           type: string
           format: password
@@ -261,6 +265,12 @@ components:
       enum:
         - UP
         - DOWN
+
+    Role:
+      type: string
+      enum:
+        - ADMIN
+        - USER
 
     InstantDateTime:
       type: object

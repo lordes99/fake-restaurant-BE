@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import systems.lordes.server.entity.converter.UserRoleConverter;
 
 import java.time.Instant;
 import java.util.List;
@@ -35,6 +36,10 @@ public class UserEntity {
     private String surname;
     @Column(length = DBConstants.GENERIC_NAMES_OR_FILENAMES)
     private String email;
+
+    @Convert(converter = UserRoleConverter.class)
+    @Column(length = DBConstants.GENERIC_ENUMS)
+    private UserRole role;
 
     @Column(length = 255, nullable = false)
     private String passwordHash;

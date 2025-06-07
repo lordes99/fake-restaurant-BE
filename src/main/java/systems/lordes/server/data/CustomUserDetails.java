@@ -29,10 +29,13 @@ public class CustomUserDetails implements UserDetails {
         return user.getSurname();
     }
 
+    public UserRole getRole() {
+        return user.getRole();
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Per ora metto un ruolo statico, appena hai UserRole puoi cambiare qui
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        return List.of(new SimpleGrantedAuthority(user.getRole().getValue()));
     }
 
     @Override
