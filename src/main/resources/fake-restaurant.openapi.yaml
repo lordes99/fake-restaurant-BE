@@ -6,12 +6,15 @@ servers:
   - url: http://localhost:8080/api/v1
 tags:
   - name: Managing API
-  - name: Project API
+  - name: Public API
+    description: Backend functions for public endpoints
+  - name: User API
+    description: Backend functions for user endpoints
 paths:
   /public/login:
     post:
       tags:
-        - Managing API
+        - Public API
       operationId: LoginPost
       summary: Login user
       requestBody:
@@ -30,7 +33,7 @@ paths:
   /public/register:
     post:
       tags:
-        - Managing API
+        - Public API
       operationId: RegisterPost
       summary: Register user
       requestBody:
@@ -51,7 +54,7 @@ paths:
       security:
         - bearerAuth: [ ]
       tags:
-        - Managing API
+        - User API
       operationId: UsersPost
       summary: Bootstrap user
       requestBody:
@@ -70,6 +73,8 @@ paths:
         401:
           $ref: '#/components/responses/Unauthorized_401'
     get:
+      tags:
+        - User API
       parameters:
         - $ref: '#/components/parameters/PageQueryParam'
         - $ref: '#/components/parameters/SizeQueryParam'
@@ -97,7 +102,7 @@ paths:
       security:
         - bearerAuth: [ ]
       tags:
-        - Managing API
+        - User API
       operationId: UserIdGet
       summary: Get User Data
       responses:
@@ -113,7 +118,7 @@ paths:
       security:
         - bearerAuth: [ ]
       tags:
-        - Managing API
+        - User API
       operationId: UserIdPost
       summary: Modify User Data
       requestBody:
