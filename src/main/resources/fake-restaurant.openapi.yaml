@@ -95,7 +95,7 @@ paths:
                     $ref: "#/components/schemas/Page"
         401:
           $ref: '#/components/responses/Unauthorized_401'
-  /user/{id}:
+  /users/{id}:
     parameters:
       - $ref: '#/components/parameters/UUIDParamPath'
     get:
@@ -133,6 +133,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        401:
+          $ref: '#/components/responses/Unauthorized_401'
 
 components:
   responses:
@@ -242,6 +244,10 @@ components:
           type: string
         ownerUserId:
           $ref: "#/components/schemas/UUIDReference"
+#        defaultLanguage:
+#          type: string
+#        disabledAt:
+#          $ref: '#/components/schemas/InstantDateTimeRO'
 
     Review:
       type: object
