@@ -2,6 +2,7 @@ package systems.lordes.server.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import systems.lordes.server.data.UserData;
+import systems.lordes.server.data.UserRole;
 import systems.lordes.server.data.UsersPageData;
 import systems.lordes.server.entity.UserEntity;
 import systems.lordes.server.gen.api.User;
@@ -120,12 +121,13 @@ public class UserService {
         return Optional.of(userMapper.toData(userRepository.save(existingUser)));
     }
 
-    public UserData createUser(User user) {
+    public UserData createUser(User user, boolean roleChoiceAllowed) {
         UserEntity userEntity = userMapper.toEntity(user);
 
+        if (!roleChoiceAllowed) {
+            userEntity.setRole(UserRole.USER);
+        }
 
-
-        // Codifica la password prima di salvarla
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         userEntity.setPasswordHash(hashedPassword);
 

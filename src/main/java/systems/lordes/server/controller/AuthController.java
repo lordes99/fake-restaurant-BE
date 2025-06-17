@@ -59,6 +59,6 @@ public class AuthController implements PublicApi {
 
     @Override
     public ResponseEntity<User> registerPost(User user) {
-        return ResponseEntity.ok(userMapper.toApi(userService.createUser(user)));
+        return ResponseEntity.ok(userMapper.toApi(userService.createUser(user, false)));
     }
 }
