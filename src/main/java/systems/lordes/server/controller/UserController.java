@@ -68,9 +68,9 @@ public class UserController implements UsersApi {
     @Override
     public ResponseEntity<User> userIdGet(UUID id) {
         User loggedUser = userMapper.toApi(ControllerUtils.getPrincipalSession());
-        if (loggedUser.getId().equals(id)) {
+        if (loggedUser != null && loggedUser.getId().equals(id)) {
             return ResponseEntity.ok(loggedUser);
-        } else if (Role.ADMIN.equals(loggedUser.getRole())) {
+        } else if (loggedUser != null && Role.ADMIN.equals(loggedUser.getRole())) {
             return userService.getUserById(id)
                 .map(user -> ResponseEntity.ok(userMapper.toApi(user)))
                 .orElseGet(() -> {
@@ -84,12 +84,19 @@ public class UserController implements UsersApi {
     }
 
     @Override
-    public ResponseEntity<User> userIdPost(UUID id, User user) {
-        ControllerUtils.getPrincipal();
-
-        user.setId(id);
-        User modified = userService.modifyUser(user);
-        return ResponseEntity.ok(modified);
+    public ResponseEntity<User> userIdPut(UUID id, User user) {
+        User loggedUser = userMapper.toApi(ControllerUtils.getPrincipalSession());
+        if (loggedUser != null && (loggedUser.getId().equals(id) || Role.ADMIN.equals(loggedUser.getRole()))) {
+            return userService.modifyUser(user)
+                .map(userData -> ResponseEntity.ok(userMapper.toApi(userData)))
+                .orElseGet(() -> {
+                    Error error = new Error().message("Not found: user not found");
+                    return (ResponseEntity) ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+                });
+        } else {
+            Error error = new Error().message("Access denied: unauthorized user");
+            return (ResponseEntity) ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+        }
     }
 
     @Override

@@ -107,8 +107,17 @@ public class UserService {
         }
     }
 
-    public User modifyUser(User user) {
-        throw new RuntimeException("Not implemented yet");
+    public Optional<UserData> modifyUser(User user) {
+        UserEntity userEntity = userMapper.toEntity(user);
+        UserEntity existingUser = userRepository.findById(user.getId()).orElseThrow();
+        mergeUserEntity(userEntity, existingUser);
+
+        if (user.getPassword() != null && !user.getPassword().isBlank()) {
+            String hashedPassword = passwordEncoder.encode(user.getPassword());
+            existingUser.setPasswordHash(hashedPassword);
+        }
+
+        return Optional.of(userMapper.toData(userRepository.save(existingUser)));
     }
 
     public UserData createUser(User user) {
@@ -125,6 +134,21 @@ public class UserService {
 
     public boolean checkPassword(String rawPassword, String storedHash) {
         return passwordEncoder.matches(rawPassword, storedHash);
+    }
+
+    private void mergeUserEntity(UserEntity source, UserEntity target) {
+        if (source.getName() != null) {
+            target.setName(source.getName());
+        }
+        if (source.getSurname() != null) {
+            target.setSurname(source.getSurname());
+        }
+        if (source.getEmail() != null) {
+            target.setEmail(source.getEmail());
+        }
+        if (source.getRole() != null) {
+            target.setRole(source.getRole());
+        }
     }
 
 }
