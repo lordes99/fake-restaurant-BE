@@ -114,12 +114,12 @@ paths:
                 $ref: '#/components/schemas/User'
         401:
           $ref: '#/components/responses/Unauthorized_401'
-    post:
+    put:
       security:
         - bearerAuth: [ ]
       tags:
         - User API
-      operationId: UserIdPost
+      operationId: UserIdPut
       summary: Modify User Data
       requestBody:
         content:
@@ -135,11 +135,19 @@ paths:
                 $ref: '#/components/schemas/User'
         401:
           $ref: '#/components/responses/Unauthorized_401'
+        404:
+          $ref: '#/components/responses/Not_Found_404'
 
 components:
   responses:
     Unauthorized_401:
       description: Unauthorized_401
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Not_Found_404:
+      description: Not_Found_404
       content:
         application/json:
           schema:
