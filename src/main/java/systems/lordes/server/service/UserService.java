@@ -95,8 +95,8 @@ public class UserService {
         return userMapper.toData(userRepository.findAll(pageRequest));
     }
 
-    public User getUserById(UUID id) {
-        throw new RuntimeException("Not implemented yet");
+    public Optional<UserData> getUserById(UUID id) {
+        return Optional.of(userMapper.toData(userRepository.findById(id).orElse(null)));
     }
 
     public Optional<UserData> getUserByEmail(String email) {

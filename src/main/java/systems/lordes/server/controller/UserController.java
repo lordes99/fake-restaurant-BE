@@ -21,7 +21,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(ControllerUtils.PREFIX_API_V1)
-public class UserController implements UsersApi, UserApi {
+public class UserController implements UsersApi {
 
     private final UserService userService;
     private final UserMapper userMapper;
@@ -67,10 +67,20 @@ public class UserController implements UsersApi, UserApi {
 
     @Override
     public ResponseEntity<User> userIdGet(UUID id) {
-        ControllerUtils.getPrincipal();
-
-        User user = userService.getUserById(id);
-        return ResponseEntity.ok(user);
+        User loggedUser = userMapper.toApi(ControllerUtils.getPrincipalSession());
+        if (loggedUser.getId().equals(id)) {
+            return ResponseEntity.ok(loggedUser);
+        } else if (Role.ADMIN.equals(loggedUser.getRole())) {
+            return userService.getUserById(id)
+                .map(user -> ResponseEntity.ok(userMapper.toApi(user)))
+                .orElseGet(() -> {
+                    Error error = new Error().message("Not found: user not found");
+                    return (ResponseEntity) ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+                });
+        } else {
+            Error error = new Error().message("Access denied: unauthorized user");
+            return (ResponseEntity) ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+        }
     }
 
     @Override
