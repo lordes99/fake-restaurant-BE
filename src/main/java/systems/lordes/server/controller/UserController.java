@@ -101,10 +101,16 @@ public class UserController implements UsersApi {
 
     @Override
     public ResponseEntity<UUID> usersPost(User user) {
-        ControllerUtils.getPrincipal();
+        User loggedUser = userMapper.toApi(ControllerUtils.getPrincipalSession());
+        if (loggedUser == null || !Role.ADMIN.equals(loggedUser.getRole())) {
+            Error error = new Error().message("Access denied: unauthorized user");
+            return (ResponseEntity) ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+        }
 
-//        UUID id = userService.createUser(user);
-//        return ResponseEntity.ok(id);
-        return null;
+        return ResponseEntity.ok(
+            userMapper.toApi(
+                userService.createUser(user, true)
+            ).getId()
+        );
     }
 }
