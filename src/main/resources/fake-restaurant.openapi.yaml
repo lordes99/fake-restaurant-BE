@@ -78,6 +78,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/PageQueryParam'
         - $ref: '#/components/parameters/SizeQueryParam'
+        - $ref: '#/components/parameters/SearchQueryParam'
+      operationId: UsersGet
       responses:
         '200':
           description: Successful operation
@@ -172,6 +174,15 @@ components:
         format: int32
       description: |
         Size 0 equals to default size. Maximum size may be limited anytime and not honored by the backend.
+
+    SearchQueryParam:
+      in: query
+      required: false
+      name: search
+      schema:
+        type: string
+      description: |
+        Search keyword to search in element.
 
     UUIDParamPath:
       in: path
