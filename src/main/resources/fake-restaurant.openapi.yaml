@@ -5,16 +5,17 @@ info:
 servers:
   - url: http://localhost:8080/api/v1
 tags:
-  - name: Managing API
-  - name: Public API
+  - name: Public
     description: Backend functions for public endpoints
-  - name: User API
+  - name: User
+    description: Backend functions for user endpoints
+  - name: Restaurant
     description: Backend functions for user endpoints
 paths:
   /public/login:
     post:
       tags:
-        - Public API
+        - Public
       operationId: LoginPost
       summary: Login user
       requestBody:
@@ -33,7 +34,7 @@ paths:
   /public/register:
     post:
       tags:
-        - Public API
+        - Public
       operationId: RegisterPost
       summary: Register user
       requestBody:
@@ -54,7 +55,7 @@ paths:
       security:
         - bearerAuth: [ ]
       tags:
-        - User API
+        - User
       operationId: UsersPost
       summary: Bootstrap user
       requestBody:
@@ -74,7 +75,7 @@ paths:
           $ref: '#/components/responses/Unauthorized_401'
     get:
       tags:
-        - User API
+        - User
       parameters:
         - $ref: '#/components/parameters/PageQueryParam'
         - $ref: '#/components/parameters/SizeQueryParam'
@@ -97,6 +98,7 @@ paths:
                     $ref: "#/components/schemas/Page"
         401:
           $ref: '#/components/responses/Unauthorized_401'
+
   /users/{id}:
     parameters:
       - $ref: '#/components/parameters/UUIDParamPath'
@@ -104,7 +106,7 @@ paths:
       security:
         - bearerAuth: [ ]
       tags:
-        - User API
+        - User
       operationId: UserIdGet
       summary: Get User Data
       responses:
@@ -120,7 +122,7 @@ paths:
       security:
         - bearerAuth: [ ]
       tags:
-        - User API
+        - User
       operationId: UserIdPut
       summary: Modify User Data
       requestBody:

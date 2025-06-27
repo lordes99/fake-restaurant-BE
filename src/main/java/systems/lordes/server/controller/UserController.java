@@ -11,7 +11,6 @@ import systems.lordes.server.gen.api.Role;
 import systems.lordes.server.gen.api.User;
 import systems.lordes.server.gen.api.UsersPage;
 import systems.lordes.server.gen.controller.UserApi;
-import systems.lordes.server.gen.controller.UsersApi;
 import systems.lordes.server.mapper.UserMapper;
 import systems.lordes.server.service.UserService;
 import systems.lordes.server.utils.ControllerUtils;
@@ -21,7 +20,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(ControllerUtils.PREFIX_API_V1)
-public class UserController implements UsersApi {
+public class UserController implements UserApi {
 
     private final UserService userService;
     private final UserMapper userMapper;
