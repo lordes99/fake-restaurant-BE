@@ -44,13 +44,12 @@ public class UserController implements UsersApi {
         }
 
         UsersPage users;
-        if ((page == null || page < 1) && (size == null || size < 1)) {
-            List<User> usersApi = userMapper.toApis(userService.findUsers());
-            users = new UsersPage().content(usersApi);
-            return ResponseEntity.ok(users);
+        if (page == null || size == null) {
+            Error error = new Error().message("Filter Error: page or size is null");
+            return (ResponseEntity) ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
         }
 
-        PageRequest pageRequest = ControllerUtils.pageOf(page, size);
+        PageRequest pageRequest = ControllerUtils.pageOf(page - 1, size);
         users = userMapper.toApis(userService.findUsers(pageRequest));
         return ResponseEntity.ok(users);
     }
