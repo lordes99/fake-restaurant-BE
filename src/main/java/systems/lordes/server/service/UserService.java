@@ -1,23 +1,19 @@
 package systems.lordes.server.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import systems.lordes.server.data.UserData;
 import systems.lordes.server.data.UserRole;
 import systems.lordes.server.data.UsersPageData;
 import systems.lordes.server.entity.UserEntity;
 import systems.lordes.server.gen.api.User;
 import systems.lordes.server.mapper.UserMapper;
-import systems.lordes.server.mapper.UserMapper3;
-import systems.lordes.server.repository.RestaurantRepository;
 import systems.lordes.server.repository.UserRepository;
-//import jakarta.ws.rs.core.Response;
-//import org.keycloak.admin.client.resource.UsersResource;
-//import org.keycloak.representations.idm.UserRepresentation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import systems.lordes.server.utils.UserSpecifications;
 
 import java.util.List;
 import java.util.Optional;
@@ -92,8 +88,9 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UsersPageData findUsers(PageRequest pageRequest) {
-        return userMapper.toData(userRepository.findAll(pageRequest));
+    public UsersPageData findUsers(PageRequest pageRequest, String search) {
+        Specification<UserEntity> spec = UserSpecifications.searchByKeyword(search);
+        return userMapper.toData(userRepository.findAll(spec, pageRequest));
     }
 
     public Optional<UserData> getUserById(UUID id) {

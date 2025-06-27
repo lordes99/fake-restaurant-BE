@@ -36,7 +36,7 @@ public class UserController implements UsersApi {
     }
 
     @Override
-    public ResponseEntity<UsersPage> usersGet(Integer page, Integer size) {
+    public ResponseEntity<UsersPage> usersGet(Integer page, Integer size, String search) {
         User loggedUser = userMapper.toApi(ControllerUtils.getPrincipalSession());
         if (loggedUser == null || !Role.ADMIN.equals(loggedUser.getRole())) {
             Error error = new Error().message("Access denied: unauthorized user");
@@ -50,7 +50,7 @@ public class UserController implements UsersApi {
         }
 
         PageRequest pageRequest = ControllerUtils.pageOf(page - 1, size);
-        users = userMapper.toApis(userService.findUsers(pageRequest));
+        users = userMapper.toApis(userService.findUsers(pageRequest, search));
         return ResponseEntity.ok(users);
     }
 
