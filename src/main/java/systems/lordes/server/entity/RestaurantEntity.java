@@ -32,6 +32,9 @@ public class RestaurantEntity {
     @Column
     private String thumbnail;
 
+    @Column(columnDefinition = "text[]")
+    private List<String> photos;
+
     @Column
     private Double latitude;
     @Column
