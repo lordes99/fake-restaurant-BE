@@ -251,6 +251,92 @@ components:
           type: string
         createdAt:
           $ref: '#/components/schemas/InstantDateTimeRO'
+        address:
+          $ref: '#/components/schemas/Address'
+        characteristics:
+          items:
+            $ref: '#/components/schemas/RestaurantCharacteristic'
+        photos:
+          items:
+            type: string
+        workingHours:
+          items:
+            $ref: "#/components/schemas/WorkingDay"
+        ownerUserId:
+          $ref: "#/components/schemas/UUIDReference"
+        reviews:
+          items:
+            $ref: "#/components/schemas/Review"
+    #        defaultLanguage:
+#          type: string
+#        disabledAt:
+#          $ref: '#/components/schemas/InstantDateTimeRO'
+
+    WorkingDay:
+      type: object
+      properties:
+        day:
+          $ref: '#/components/schemas/DayType'
+        closed:
+          type: boolean
+        hours:
+          items:
+            $ref: '#/components/schemas/WorkingHour'
+
+    WorkingHour:
+      type: object
+      properties:
+        open:
+          $ref: '#/components/schemas/InstantDateTimeRO'
+        close:
+          $ref: '#/components/schemas/InstantDateTimeRO'
+
+    DayType:
+      type: string
+      enum:
+        - Monday
+        - Tuesday
+        - Wednesday
+        - Thursday
+        - Friday
+        - Saturday
+        - Sunday
+
+    RestaurantCharacteristic:
+      type: string
+      enum:
+        - FAST_FOOD
+        - PIZZERIA
+        - PUB
+        - RESTAURANT
+        - BISTROT
+        - FARMHOUSE
+        - STREET_FOOD
+        - VEGETARIAN
+        - VEGAN
+        - GLUTEN_FREE
+        - FISH
+        - MEAT
+        - INDIAN
+        - SUSHI
+        - JAPANESE
+        - SPANISH
+        - MEXICAN
+        - GREEK
+        - KEBAB
+        - ITALIAN
+
+    Address:
+      type: object
+      properties:
+        country:
+          type: string
+        city:
+          type: string
+        street:
+          type: string
+        postalCode:
+          type: string
         latitude:
           type: number
           format: double
@@ -261,14 +347,6 @@ components:
           format: double
           minimum: -180
           maximum: 180
-        thumbnail:
-          type: string
-        ownerUserId:
-          $ref: "#/components/schemas/UUIDReference"
-#        defaultLanguage:
-#          type: string
-#        disabledAt:
-#          $ref: '#/components/schemas/InstantDateTimeRO'
 
     Review:
       type: object
