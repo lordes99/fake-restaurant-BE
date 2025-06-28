@@ -357,29 +357,14 @@ components:
           type: string
         description:
           type: string
-        votes:
-          type: array
-          items:
-            $ref: "#/components/schemas/Vote"
-        createdAt:
-          $ref: '#/components/schemas/InstantDateTimeRO'
-        thumbnail:
-          type: string
-        restaurantId:
-          $ref: "#/components/schemas/UUIDReference"
-        ownerUserId:
-          $ref: "#/components/schemas/UUIDReference"
-
-    Vote:
-      type: object
-      properties:
-        id:
-          $ref: "#/components/schemas/UUIDReference"
-        voteType:
+        vote:
           $ref: "#/components/schemas/VoteType"
         createdAt:
           $ref: '#/components/schemas/InstantDateTimeRO'
-        reviewId:
+        photos:
+          items:
+            type: string
+        restaurantId:
           $ref: "#/components/schemas/UUIDReference"
         ownerUserId:
           $ref: "#/components/schemas/UUIDReference"
