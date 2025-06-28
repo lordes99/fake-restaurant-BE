@@ -5,8 +5,16 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import systems.lordes.server.config.WorkingDayDataListConverter;
+import systems.lordes.server.data.WorkingDayData;
+import systems.lordes.server.entity.converter.RestaurantCharacteristicListConverter;
+import systems.lordes.server.gen.api.Address;
+import systems.lordes.server.gen.api.RestaurantCharacteristic;
+import systems.lordes.server.gen.api.VoteType;
 
 import java.time.Instant;
 import java.util.List;
@@ -29,16 +37,20 @@ public class RestaurantEntity {
     @Column(length = DBConstants.GENERIC_DESCRIPTIONS)
     private String description;
 
-    @Column
-    private String thumbnail;
-
     @Column(columnDefinition = "text[]")
     private List<String> photos;
 
-    @Column
-    private Double latitude;
-    @Column
-    private Double longitude;
+    @Convert(converter = RestaurantCharacteristicListConverter.class)
+    @Column(columnDefinition = "jsonb")
+    private List<RestaurantCharacteristic> characteristics;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
+    private Address address;
+
+    @Convert(converter = WorkingDayDataListConverter.class)
+    @Column(name = "working_hours", columnDefinition = "jsonb")
+    private List<WorkingDayData> workingHours;
 
     @CreatedDate
     @Column(columnDefinition= DBConstants.COLUMN_DEFINITION_TIMESTAMPZ)
