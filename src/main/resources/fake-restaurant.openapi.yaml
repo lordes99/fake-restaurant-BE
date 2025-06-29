@@ -142,6 +142,38 @@ paths:
         404:
           $ref: '#/components/responses/Not_Found_404'
 
+  /restaurants:
+    post:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Restaurant
+      operationId: RestaurantsPost
+      summary: Create new restaurant
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                restaurant:
+                  $ref: '#/components/schemas/Restaurant'
+                photos:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        201:
+          description: the restaurant uuid
+          content:
+            application/json:
+              schema:
+                type: string
+                format: uuid
+        401:
+          $ref: '#/components/responses/Unauthorized_401'
+
 components:
   responses:
     Unauthorized_401:
@@ -262,8 +294,8 @@ components:
         workingHours:
           items:
             $ref: "#/components/schemas/WorkingDay"
-        ownerUserId:
-          $ref: "#/components/schemas/UUIDReference"
+        ownerUser:
+          $ref: "#/components/schemas/User"
         reviews:
           items:
             $ref: "#/components/schemas/Review"
