@@ -268,9 +268,11 @@ components:
           type: string
           format: password
         createdAt:
-          $ref: '#/components/schemas/InstantDateTimeRO'
+          type: string
+          format: date-time
         updatedAt:
-          $ref: '#/components/schemas/InstantDateTimeRO'
+          type: string
+          format: date-time
 
     Restaurant:
       type: object
@@ -282,7 +284,8 @@ components:
         description:
           type: string
         createdAt:
-          $ref: '#/components/schemas/InstantDateTimeRO'
+          type: string
+          format: date-time
         address:
           $ref: '#/components/schemas/Address'
         characteristics:
@@ -319,9 +322,11 @@ components:
       type: object
       properties:
         open:
-          $ref: '#/components/schemas/InstantDateTimeRO'
+          type: string
+          format: date-time
         close:
-          $ref: '#/components/schemas/InstantDateTimeRO'
+          type: string
+          format: date-time
 
     DayType:
       type: string
@@ -392,7 +397,8 @@ components:
         vote:
           $ref: "#/components/schemas/VoteType"
         createdAt:
-          $ref: '#/components/schemas/InstantDateTimeRO'
+          type: string
+          format: date-time
         photos:
           items:
             type: string
