@@ -10,11 +10,10 @@ import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import systems.lordes.server.config.WorkingDayDataListConverter;
-import systems.lordes.server.data.WorkingDayData;
 import systems.lordes.server.entity.converter.RestaurantCharacteristicListConverter;
 import systems.lordes.server.gen.api.Address;
 import systems.lordes.server.gen.api.RestaurantCharacteristic;
-import systems.lordes.server.gen.api.VoteType;
+import systems.lordes.server.gen.api.WorkingDay;
 
 import java.time.Instant;
 import java.util.List;
@@ -50,7 +49,7 @@ public class RestaurantEntity {
 
     @Convert(converter = WorkingDayDataListConverter.class)
     @Column(name = "working_hours", columnDefinition = "jsonb")
-    private List<WorkingDayData> workingHours;
+    private List<WorkingDay> workingHours;
 
     @CreatedDate
     @Column(columnDefinition= DBConstants.COLUMN_DEFINITION_TIMESTAMPZ)
