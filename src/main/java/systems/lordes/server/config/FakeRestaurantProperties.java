@@ -18,4 +18,7 @@ public class FakeRestaurantProperties {
     private String secretJwtKey;
 
     private Long jwtExpiration = 28800000L;
+
+    @NotNull
+    private String nominatimUrl;
 }
