@@ -1,15 +1,19 @@
 package systems.lordes.server.mapper;
 
 import org.mapstruct.*;
-import systems.lordes.server.data.NominatimPointData;
+import systems.lordes.server.data.NominatimAddressResponseData;
 import systems.lordes.server.gen.api.Address;
-import systems.lordes.server.gen.api.NominatimPoint;
+import systems.lordes.server.gen.api.NominatimForwardSearchResponse;
+
+import java.util.List;
 
 @Mapper(componentModel = "spring",
         unmappedSourcePolicy = ReportingPolicy.IGNORE, unmappedTargetPolicy = ReportingPolicy.ERROR)
 public interface NominatimMapper {
 
-    NominatimPoint toApi(NominatimPointData nominatimPointData);
+    NominatimForwardSearchResponse toApi(NominatimAddressResponseData nominatimPointData);
+
+    List<NominatimForwardSearchResponse> toApi(List<NominatimAddressResponseData>  nominatimPointData);
 
     @Mapping(target = "country", source = "country")
     @Mapping(target = "city", source = "town")
@@ -18,10 +22,10 @@ public interface NominatimMapper {
     @Mapping(target = "latitude", ignore = true)
     @Mapping(target = "longitude", ignore = true)
     @Mapping(target = "displayName", ignore = true)
-    Address toApi(NominatimPointData.AddressData addressData);
+    Address toApi(NominatimAddressResponseData.AddressData addressData);
 
     @AfterMapping
-    default void afterMapping(NominatimPointData source, @MappingTarget NominatimPoint target) {
+    default void afterMapping(NominatimAddressResponseData source, @MappingTarget NominatimForwardSearchResponse target) {
         double lat = source.getLat();
         double lon = source.getLon();
         Address address = target.getAddress();
@@ -29,7 +33,7 @@ public interface NominatimMapper {
             address
                 .latitude(lat)
                 .longitude(lon)
-                .displayName(source.getDisplay_name());
+                .displayName(source.getDisplayName());
             if (address.getCity() == null) {
                 address.city(source.getAddress().getCounty());
             }

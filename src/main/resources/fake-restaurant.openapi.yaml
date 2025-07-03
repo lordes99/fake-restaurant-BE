@@ -216,11 +216,36 @@ paths:
               $ref: '#/components/schemas/Coordinate'
       responses:
         200:
-          description: Token JWT
+          description: Address
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NominatimPoint'
+                $ref: '#/components/schemas/NominatimForwardSearchResponse'
+        401:
+          $ref: '#/components/responses/Unauthorized_401'
+
+  /forward-geocode:
+    post:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Geo
+      operationId: forwardGeocodeSearch
+      summary: return geopoint name from address
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NominatimForwardSearchRequest'
+      responses:
+        200:
+          description: Results of search coordinate
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NominatimForwardSearchResponse'
         401:
           $ref: '#/components/responses/Unauthorized_401'
 
@@ -621,9 +646,23 @@ components:
           minimum: -180
           maximum: 180
 
-    NominatimPoint:
+    NominatimForwardSearchRequest:
       type: object
       properties:
         address:
-          $ref: '#/components/schemas/Address'
+          type: string
+        limit:
+          type: integer
 
+    NominatimForwardSearchResponse:
+      type: object
+      properties:
+        placeId:
+          type: number
+          format: long
+        address:
+          $ref: '#/components/schemas/Address'
+        importance:
+          type: number
+          format: double
+#        capire come gestire boundingBox

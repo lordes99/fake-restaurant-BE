@@ -10,8 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import systems.lordes.server.config.FakeRestaurantProperties;
-import systems.lordes.server.data.NominatimPointData;
+import systems.lordes.server.data.NominatimAddressResponseData;
 import systems.lordes.server.gen.api.Coordinate;
+import systems.lordes.server.gen.api.NominatimForwardSearchRequest;
 
 import java.net.URI;
 import java.util.List;
@@ -36,12 +37,24 @@ public class NominatimService {
         this.baseUrl = fakeRestaurantProperties.getNominatimUrl();
     }
 
+    public List<NominatimAddressResponseData> forwardGeocodeSearch(NominatimForwardSearchRequest nominatimForwardSearchRequest) {
+        URI url = buildUrl(nominatimForwardSearchRequest);
+        log.info("Forward geocode request url: {}", url);
 
-    public NominatimPointData reverseGeocode(Coordinate coordinate) {
+        return restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<NominatimAddressResponseData>>() {}
+        ).getBody();
+    }
+
+
+    public NominatimAddressResponseData reverseGeocode(Coordinate coordinate) {
         URI url = buildUrl(coordinate);
         log.info("Reverse geocode request url: {}", url);
 
-        return restTemplate.getForObject(url, NominatimPointData.class);
+        return restTemplate.getForObject(url, NominatimAddressResponseData.class);
     }
 
     private URI buildUrl(Coordinate coordinate) {
@@ -56,5 +69,19 @@ public class NominatimService {
             .toUri();
     }
 
+    private URI buildUrl(NominatimForwardSearchRequest nominatimForwardSearchRequest) {
+        UriComponentsBuilder builder = UriComponentsBuilder
+                .fromUriString(NOMINATIM_URL + FORWARD_SEARCH)
+                .queryParam("q", nominatimForwardSearchRequest.getAddress())
+                .queryParam("format", "json")
+                .queryParam("accept-language", "it")
+                .queryParam("addressdetails", "1");
+
+        Integer limit = nominatimForwardSearchRequest.getLimit();
+        if (limit != null && limit > 0) {
+            builder.queryParam("limit", limit);
+        }
+
+        return builder.build().encode().toUri();
     }
 }
