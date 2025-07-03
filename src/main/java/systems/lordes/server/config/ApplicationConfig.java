@@ -58,9 +58,7 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder builder) {
-        return builder
-            .defaultHeader(HttpHeaders.USER_AGENT, "my-spring-app")
-            .build();
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 }
