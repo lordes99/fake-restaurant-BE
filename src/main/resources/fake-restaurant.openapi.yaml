@@ -10,7 +10,9 @@ tags:
   - name: User
     description: Backend functions for user endpoints
   - name: Restaurant
-    description: Backend functions for user endpoints
+    description: Backend functions for restaurant endpoints
+  - name: Geo
+    description: Backend functions for geo endpoints
 paths:
   /public/login:
     post:
@@ -198,6 +200,339 @@ paths:
                       $ref: "#/components/schemas/Restaurant"
                   page:
                     $ref: "#/components/schemas/Page"
+
+  /reverse-geocode:
+    post:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Geo
+      operationId: reverseGeocodeSearch
+      summary: return point name from lat and lon
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Coordinate'
+      responses:
+        200:
+          description: Token JWT
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NominatimPoint'
+        401:
+          $ref: '#/components/responses/Unauthorized_401'
+
+  /restaurants/{id}/upload-photo:
+    post:
+      parameters:
+        - $ref: '#/components/parameters/UUIDParamPath'
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Restaurant
+      operationId: RestaurantsIdUploadPhotoPost
+      summary: Add photos in restaurant
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                files:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+              required:
+                - file
+      responses:
+        200:
+          description: Photo url
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  uris:
+                    type: array
+                    items:
+                      type: string
+                      format: uri
+        401:
+          $ref: '#/components/responses/Unauthorized_401'
+
+
+#  /user/session:
+#    get:
+#      security:
+#        - bearerAuth: [ ]
+#      tags:
+#        - Managing API
+#      operationId: UserSessionGet
+#      summary: Get current User session
+#      responses:
+#        200:
+#          description: the user with current profile
+#          content:
+#            application/json:
+#              schema:
+#                title: UserSession
+#                type: object
+#                properties:
+#                  user:
+#                    $ref: "#/components/schemas/User"
+#                  permissions:
+#                    type: array
+#                    items:
+#                      type: string
+
+#  /organizations:
+#    post:
+#      security:
+#        - bearerAuth: [ ]
+#      tags:
+#        - Managing API
+#      operationId: OrganizationsPost
+#      summary: Create new organization
+#      requestBody:
+#        content:
+#          application/json:
+#            schema:
+#              $ref: '#/components/schemas/Organization'
+#      responses:
+#        201:
+#          description: the organization uuid
+#          content:
+#            application/json:
+#              schema:
+#                type: string
+#                format: uuid
+#    get:
+#      security:
+#        - bearerAuth: [ ]
+#      tags:
+#        - Managing API
+#      operationId: OrganizationsGet
+#      summary: Get organizations
+#      parameters:
+#        - $ref: '#/components/parameters/PageQueryParam'
+#        - $ref: '#/components/parameters/SizeQueryParam'
+#      responses:
+#        200:
+#          description: The fetched entities
+#          content:
+#            application/json:
+#              schema:
+#                title: OrganizationsPage
+#                type: object
+#                properties:
+#                  content:
+#                    type: array
+#                    items:
+#                      $ref: "#/components/schemas/Organization"
+#                  page:
+#                    $ref: "#/components/schemas/Page"
+
+#  /organization/{id}:
+#    parameters:
+#      - $ref: '#/components/parameters/UUIDParamPath'
+#    get:
+#      security:
+#        - bearerAuth: [ ]
+#      tags:
+#        - Managing API
+#      operationId: OrganizationIdGet
+#      summary: Get Organization Data
+#      responses:
+#        200:
+#          description: the organization
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/Organization'
+#    post:
+#      security:
+#        - bearerAuth: [ ]
+#      tags:
+#        - Managing API
+#      operationId: OrganizationIdPost
+#      summary: Modify Organization Data
+#      requestBody:
+#        content:
+#          application/json:
+#            schema:
+#              $ref: '#/components/schemas/Organization'
+#      responses:
+#        200:
+#          description: the organization
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/Organization'
+
+
+#  /projects:
+#    post:
+#      security:
+#        - bearerAuth: [ ]
+#      tags:
+#        - Project
+#      operationId: ProjectsPost
+#      summary: Create new project
+#      requestBody:
+#        content:
+#          application/json:
+#            schema:
+#              $ref: '#/components/schemas/Project'
+#      responses:
+#        201:
+#          description: the entity uuid
+#          content:
+#            application/json:
+#              schema:
+#                type: string
+#                format: uuid
+#    get:
+#      tags:
+#        - Project
+#      parameters:
+#        - $ref: '#/components/parameters/PageQueryParam'
+#        - $ref: '#/components/parameters/SizeQueryParam'
+#      responses:
+#        '200':
+#          description: Successful operation
+#          content:
+#            application/json:
+#              schema:
+#                title: ProjectsPage
+#                type: object
+#                properties:
+#                  content:
+#                    type: array
+#                    items:
+#                      $ref: "#/components/schemas/Project"
+#                  page:
+#                    $ref: "#/components/schemas/Page"
+#  /project/{id}:
+#    parameters:
+#      - $ref: '#/components/parameters/UUIDParamPath'
+#    get:
+#      security:
+#        - bearerAuth: [ ]
+#      tags:
+#        - Project
+#      operationId: ProjectIdGet
+#      summary: Get Project Data
+#      responses:
+#        200:
+#          description: the entity
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/Project'
+#    post:
+#      security:
+#        - bearerAuth: [ ]
+#      tags:
+#        - Project
+#      operationId: ProjectIdPost
+#      summary: Modify Project
+#      requestBody:
+#        content:
+#          application/json:
+#            schema:
+#              $ref: '#/components/schemas/Project'
+#      responses:
+#        200:
+#          description: the user uuid
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/Project'
+
+#  /AISystems:
+#    parameters:
+#      - $ref: '#/components/parameters/ProjectIdParam'
+#    post:
+#      security:
+#        - bearerAuth: [ ]
+#      tags:
+#        - Project
+#      operationId: AISystemsPost
+#      summary: Create new AISystem
+#      requestBody:
+#        content:
+#          application/json:
+#            schema:
+#              $ref: '#/components/schemas/AISystem'
+#      responses:
+#        201:
+#          description: the entity uuid
+#          content:
+#            application/json:
+#              schema:
+#                type: string
+#                format: uuid
+#    get:
+#      tags:
+#        - Project
+#      parameters:
+#        - $ref: '#/components/parameters/PageQueryParam'
+#        - $ref: '#/components/parameters/SizeQueryParam'
+#      responses:
+#        '200':
+#          description: Successful operation
+#          content:
+#            application/json:
+#              schema:
+#                title: AISystemPage
+#                type: object
+#                properties:
+#                  content:
+#                    type: array
+#                    items:
+#                      $ref: "#/components/schemas/AISystem"
+#                  page:
+#                    $ref: "#/components/schemas/Page"
+#  /AISystems/{id}:
+#    parameters:
+#      - $ref: '#/components/parameters/UUIDParamPath'
+#    get:
+#      security:
+#        - bearerAuth: [ ]
+#      tags:
+#        - Project
+#      operationId: AISystemsIdGet
+#      summary: Get Project Data
+#      responses:
+#        200:
+#          description: the entity
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/AISystem'
+#    post:
+#      security:
+#        - bearerAuth: [ ]
+#      tags:
+#        - Project
+#      operationId: AISystemsIdPost
+#      summary: Modify Project
+#      requestBody:
+#        content:
+#          application/json:
+#            schema:
+#              $ref: '#/components/schemas/AISystem'
+#      responses:
+#        200:
+#          description: the user uuid
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/AISystem'
+
 
 components:
   responses:
@@ -483,3 +818,26 @@ components:
       properties:
         message:
           type: string
+
+    Coordinate:
+      type: object
+      properties:
+        latitude:
+          type: number
+          format: double
+          minimum: -90
+          maximum: 90
+        longitude:
+          type: number
+          format: double
+          minimum: -180
+          maximum: 180
+
+    NominatimPoint:
+      type: object
+      properties:
+        displayName:
+          type: string
+        address:
+          $ref: '#/components/schemas/Address'
+
