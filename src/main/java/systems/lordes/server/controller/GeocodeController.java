@@ -33,7 +33,8 @@ public class GeocodeController implements GeoApi {
     @Override
     public ResponseEntity<List<NominatimForwardSearchResponse>> forwardGeocodeSearch(NominatimForwardSearchRequest nominatimForwardSearchRequest) {
         List<NominatimAddressResponseData> nominatimResponses = this.nominatimService.forwardGeocodeSearch(nominatimForwardSearchRequest);
-        return ResponseEntity.ok(nominatimMapper.toApi(nominatimResponses));    }
+        return ResponseEntity.ok(nominatimMapper.toApi(nominatimResponses));
+    }
 
     @Override
     public ResponseEntity<NominatimForwardSearchResponse> reverseGeocodeSearch(Coordinate coordinate) {
