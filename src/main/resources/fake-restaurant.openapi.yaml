@@ -665,4 +665,8 @@ components:
         importance:
           type: number
           format: double
+        boundingBox:
+          type: array
+          items:
+            $ref: '#/components/schemas/Coordinate'
 #        capire come gestire boundingBox
