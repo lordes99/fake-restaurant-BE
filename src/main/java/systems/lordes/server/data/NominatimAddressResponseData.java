@@ -38,7 +38,7 @@ public class NominatimAddressResponseData {
     @JsonProperty("display_name")
     private String displayName;
 
-    private List<String> boundingbox;
+    private List<Double> boundingbox;
 
     private AddressData address;
 
