@@ -40,6 +40,9 @@ public class NominatimAddressResponseData {
 
     private List<Double> boundingbox;
 
+    @JsonProperty("geojson")
+    private GeoJsonData geoJson;
+
     private AddressData address;
 
     @Data
@@ -49,5 +52,11 @@ public class NominatimAddressResponseData {
         private String county;
         private String country;
         private String postcode;
+    }
+
+    @Data
+    public static class GeoJsonData {
+        private String type;
+        private Object coordinates;
     }
 }

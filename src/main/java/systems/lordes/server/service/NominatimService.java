@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import systems.lordes.server.config.FakeRestaurantProperties;
 import systems.lordes.server.data.NominatimAddressResponseData;
+import systems.lordes.server.exception.NominatimBadMappingException;
 import systems.lordes.server.gen.api.Coordinate;
 import systems.lordes.server.gen.api.NominatimForwardSearchRequest;
 
@@ -39,22 +40,30 @@ public class NominatimService {
 
     public List<NominatimAddressResponseData> forwardGeocodeSearch(NominatimForwardSearchRequest nominatimForwardSearchRequest) {
         URI url = buildUrl(nominatimForwardSearchRequest);
-        log.info("Forward geocode request url: {}", url);
+//        log.info("Forward geocode request url: {}", url);
 
-        return restTemplate.exchange(
+        try {
+            return restTemplate.exchange(
                 url,
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<List<NominatimAddressResponseData>>() {}
-        ).getBody();
+            ).getBody();
+        } catch (Exception e) {
+            throw new NominatimBadMappingException(String.format("Error forward geocode request for url %s", url), e);
+        }
     }
 
 
     public NominatimAddressResponseData reverseGeocode(Coordinate coordinate) {
         URI url = buildUrl(coordinate);
-        log.info("Reverse geocode request url: {}", url);
+//        log.info("Reverse geocode request url: {}", url);
 
-        return restTemplate.getForObject(url, NominatimAddressResponseData.class);
+        try {
+            return restTemplate.getForObject(url, NominatimAddressResponseData.class);
+        } catch (Exception e) {
+            throw new NominatimBadMappingException(String.format("Error reverse geocode request for url %s", url), e);
+        }
     }
 
     private URI buildUrl(Coordinate coordinate) {
@@ -75,7 +84,8 @@ public class NominatimService {
                 .queryParam("q", nominatimForwardSearchRequest.getAddress())
                 .queryParam("format", "json")
                 .queryParam("accept-language", "it")
-                .queryParam("addressdetails", "1");
+                .queryParam("addressdetails", "1")
+                .queryParam("polygon_geojson", "1");
 
         Integer limit = nominatimForwardSearchRequest.getLimit();
         if (limit != null && limit > 0) {

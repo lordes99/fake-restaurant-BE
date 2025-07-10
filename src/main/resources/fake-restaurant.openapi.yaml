@@ -669,4 +669,45 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Coordinate'
-#        capire come gestire boundingBox
+        geoJson:
+          $ref: '#/components/schemas/GeoJson'
+
+    GeoJson:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/GeoJsonType'
+        polygons:
+          $ref: '#/components/schemas/MultiPolygon'
+
+    LineString:
+      type: object
+      properties:
+        polygonCoordinates:
+          type: array
+          items:
+            $ref: '#/components/schemas/Coordinate'
+
+    Polygon:
+      type: object
+      properties:
+        lineStrings:
+          type: array
+          items:
+            $ref: '#/components/schemas/LineString'
+
+    MultiPolygon:
+      type: object
+      properties:
+        multiPolygons:
+          type: array
+          items:
+            $ref: '#/components/schemas/Polygon'
+
+    GeoJsonType:
+      type: string
+      enum:
+        - Polygon
+        - MultiPolygon
+        - Point
+        - LineString
