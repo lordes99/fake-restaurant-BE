@@ -76,8 +76,8 @@ public interface NominatimMapper {
 
     private static Coordinate mapCoordinates(List<?> coordinatesSrc) {
         return new Coordinate()
-                .longitude((Double) coordinatesSrc.get(0))
-                .latitude((Double)coordinatesSrc.get(1));
+                .longitude(((Number) coordinatesSrc.get(0)).doubleValue())
+                .latitude(((Number) coordinatesSrc.get(1)).doubleValue());
     }
 
     static LineString mapLineString(List<?> coordinatesSrc, @Valid GeoJsonType type) {
