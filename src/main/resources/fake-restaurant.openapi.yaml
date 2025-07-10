@@ -707,7 +707,9 @@ components:
     GeoJsonType:
       type: string
       enum:
+        - Point
+        - MultiPoint
+        - LineString
+        - MultiLineString
         - Polygon
         - MultiPolygon
-        - Point
-        - LineString

@@ -81,7 +81,7 @@ public interface NominatimMapper {
     }
 
     static LineString mapLineString(List<?> coordinatesSrc, @Valid GeoJsonType type) {
-        if (GeoJsonType.LINE_STRING.equals(type)) {
+        if (GeoJsonType.LINE_STRING.equals(type) || GeoJsonType.MULTI_POINT.equals(type)) {
             ArrayList<Coordinate> coordinates = new ArrayList<>();
 
             for (Object coordinateObj : coordinatesSrc) {
@@ -98,7 +98,7 @@ public interface NominatimMapper {
     }
 
     private static Polygon mapPolygon(List<?> coordinates, @Valid GeoJsonType type) {
-        if (GeoJsonType.POLYGON.equals(type)) {
+        if (GeoJsonType.POLYGON.equals(type) || GeoJsonType.MULTI_LINE_STRING.equals(type)) {
             ArrayList<LineString> lineStrings = new ArrayList<>();
 
             for (Object coordinateObj : coordinates) {
