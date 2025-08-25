@@ -39,7 +39,7 @@ public class RestaurantEntity {
     @Column(columnDefinition = "text[]")
     private List<String> photos;
 
-    @Convert(converter = RestaurantCharacteristicListConverter.class)
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
     private List<RestaurantCharacteristic> characteristics;
 
@@ -47,7 +47,7 @@ public class RestaurantEntity {
     @Column(columnDefinition = "jsonb")
     private Address address;
 
-    @Convert(converter = WorkingDayDataListConverter.class)
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "working_hours", columnDefinition = "jsonb")
     private List<WorkingDay> workingHours;
 
