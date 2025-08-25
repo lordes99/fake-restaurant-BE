@@ -56,12 +56,11 @@ public class RestaurantController implements RestaurantApi {
         CustomUserDetails userDetails = ControllerUtils.getPrincipalSession();
         UserEntity loggedUser = userDetails.getUser();
 
-//        if (loggedUser == null || !Role.ADMIN.equals(userDetails.getRole())) {
-//            systems.lordes.server.gen.api.Error error = new Error().message("Access denied: unauthorized user");
-//            return (ResponseEntity) ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
-//        }
+        if (loggedUser == null) {
+            systems.lordes.server.gen.api.Error error = new Error().message("Access denied: unauthorized user");
+            return (ResponseEntity) ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+        }
         UUID restaurantId = restaurantService.createRestaurant(restaurant, photos, loggedUser);
-
 
         return ResponseEntity.ok(restaurantId);
     }
