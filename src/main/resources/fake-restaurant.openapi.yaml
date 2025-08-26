@@ -217,6 +217,53 @@ paths:
         500:
           $ref: '#/components/responses/Internal_Server_Error_500'
 
+  /public/restaurants/{id}:
+    parameters:
+      - $ref: '#/components/parameters/UUIDParamPath'
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Restaurant
+      operationId: RestaurantIdGet
+      summary: Get Restaurant Data
+      responses:
+        200:
+          description: the Restaurant uuid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Restaurant'
+        401:
+          $ref: '#/components/responses/Unauthorized_401'
+        500:
+          $ref: '#/components/responses/Internal_Server_Error_500'
+    put:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Restaurant
+      operationId: RestaurantIdPut
+      summary: Modify Restaurant Data
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Restaurant'
+      responses:
+        200:
+          description: the restaurant uuid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Restaurant'
+        401:
+          $ref: '#/components/responses/Unauthorized_401'
+        404:
+          $ref: '#/components/responses/Not_Found_404'
+        500:
+          $ref: '#/components/responses/Internal_Server_Error_500'
+
   /reverse-geocode:
     post:
       security:
