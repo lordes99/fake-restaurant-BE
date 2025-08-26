@@ -238,6 +238,10 @@ paths:
           $ref: '#/components/responses/Unauthorized_401'
         500:
           $ref: '#/components/responses/Internal_Server_Error_500'
+
+  /restaurants/{id}:
+    parameters:
+      - $ref: '#/components/parameters/UUIDParamPath'
     put:
       security:
         - bearerAuth: [ ]
