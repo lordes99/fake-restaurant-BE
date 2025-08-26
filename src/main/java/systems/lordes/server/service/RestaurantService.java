@@ -60,7 +60,8 @@ public class RestaurantService {
     }
 
     public Optional<Restaurant> findRestaurant(UUID restaurantId) {
-        return Optional.of(restaurantMapper.toApi(restaurantRepository.findById(restaurantId).orElse(null)));
+        return restaurantRepository.findByIdWithDetails(restaurantId)
+                .map(restaurantMapper::toApi);
     }
 
     private void addPhotos(RestaurantEntity restaurantEntity, List<MultipartFile> photos) {

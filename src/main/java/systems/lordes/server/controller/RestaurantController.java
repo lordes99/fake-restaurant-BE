@@ -38,6 +38,21 @@ public class RestaurantController implements RestaurantApi {
     }
 
     @Override
+    public ResponseEntity<Restaurant> restaurantIdGet(UUID id) {
+        return restaurantService.findRestaurant(id)
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> {
+                Error error = new Error().message("Not found: restaurant not found");
+                return (ResponseEntity) ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+            });
+    }
+
+    @Override
+    public ResponseEntity<Restaurant> restaurantIdPut(UUID id, Restaurant restaurant) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    @Override
     public ResponseEntity<RestaurantsPage> restaurantsGet(Integer page, Integer size, String search) {
 
         RestaurantsPage restaurants;

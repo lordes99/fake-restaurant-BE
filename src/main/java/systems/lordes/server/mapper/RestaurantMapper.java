@@ -15,7 +15,11 @@ import java.time.ZoneId;
 import java.util.List;
 
 @Mapper(componentModel = "spring",
-        unmappedSourcePolicy = ReportingPolicy.IGNORE, unmappedTargetPolicy = ReportingPolicy.ERROR)
+        unmappedSourcePolicy = ReportingPolicy.IGNORE,
+        unmappedTargetPolicy = ReportingPolicy.ERROR,
+//        uses = {UserMapper.class, ReviewMapper.class}
+        uses = {UserMapper.class}
+)
 public interface RestaurantMapper {
 
     @Mapping(target = "reviews", ignore = true)
