@@ -102,6 +102,14 @@ public class RestaurantService {
         restaurantEntity.setPhotos(photosUrl);
     }
 
+    public boolean deleteRestaurant(UUID restaurantId) {
+        if (this.restaurantRepository.existsById(restaurantId)) {
+            this.restaurantRepository.deleteById(restaurantId);
+            return true;
+        }
+        return false;
+    }
+
     private Resource toResource(MultipartFile file) throws IOException {
         return new ByteArrayResource(file.getBytes()) {
             @Override

@@ -38,6 +38,16 @@ public class RestaurantController implements RestaurantApi {
     }
 
     @Override
+    public ResponseEntity<Void> restaurantIdDelete(UUID id) {
+        if (restaurantService.deleteRestaurant(id)) {
+            return ResponseEntity.noContent().build();
+        } else {
+            Error error = new Error().message("Not found: restaurant not found");
+            return (ResponseEntity) ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        }
+    }
+
+    @Override
     public ResponseEntity<Restaurant> restaurantIdGet(UUID id) {
         return restaurantService.findRestaurant(id)
             .map(ResponseEntity::ok)
