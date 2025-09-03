@@ -251,16 +251,24 @@ paths:
       summary: Modify Restaurant Data
       requestBody:
         content:
-          application/json:
+          multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Restaurant'
+              type: object
+              properties:
+                restaurant:
+                  $ref: '#/components/schemas/Restaurant'
+                photos:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
       responses:
         200:
           description: the restaurant uuid
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Restaurant'
+                $ref: '#/components/schemas/UUIDReference'
         401:
           $ref: '#/components/responses/Unauthorized_401'
         404:
