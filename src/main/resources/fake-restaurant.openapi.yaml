@@ -345,6 +345,38 @@ paths:
         500:
           $ref: '#/components/responses/Internal_Server_Error_500'
 
+  /img/validate:
+    get:
+      tags:
+        - Image
+      summary: Validate an image URL.
+      parameters:
+        - name: url
+          in: query
+          required: true
+          schema:
+            type: string
+          description: url
+      responses:
+        200:
+          description: Validated
+          content:
+            application/json:
+              schema:
+                title: ImageValidationResponse
+                type: object
+                properties:
+                  isImage:
+                    type: boolean
+                  contentType:
+                    type: string
+        401:
+          $ref: '#/components/responses/Unauthorized_401'
+        404:
+          $ref: '#/components/responses/Not_Found_404'
+        500:
+          $ref: '#/components/responses/Internal_Server_Error_500'
+
 #  /restaurants/{id}/upload-photo:
 #    post:
 #      parameters:
