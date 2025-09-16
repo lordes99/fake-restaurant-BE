@@ -1,5 +1,6 @@
 package systems.lordes.server.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -58,8 +59,29 @@ public class RestaurantController implements RestaurantApi {
     }
 
     @Override
-    public ResponseEntity<Restaurant> restaurantIdPut(UUID id, Restaurant restaurant) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    public ResponseEntity<UUID> restaurantIdPut(UUID id, Restaurant restaurant, List<MultipartFile> photos) {
+        CustomUserDetails userDetails = ControllerUtils.getPrincipalSession();
+        UserEntity loggedUser = userDetails.getUser();
+
+        if (loggedUser == null) {
+            systems.lordes.server.gen.api.Error error = new Error().message("Access denied: unauthorized user");
+            return (ResponseEntity) ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+        }
+
+        Restaurant existing = restaurantService.findRestaurant(id)
+                .orElseThrow(() -> new EntityNotFoundException("Restaurant with id " + id + " not found"));
+
+        if (!existing.getOwnerUser().getId().equals(loggedUser.getId())) {
+            systems.lordes.server.gen.api.Error error = new Error().message("Access denied: unauthorized user");
+            return (ResponseEntity) ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+        }
+
+        if (restaurantService.updateRestaurant(id, restaurant, photos)) {
+            return ResponseEntity.ok(id);
+        }
+
+        systems.lordes.server.gen.api.Error error = new Error().message("Not Update: restaurant not updated");
+        return (ResponseEntity) ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(error);
     }
 
     @Override

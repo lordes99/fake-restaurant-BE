@@ -17,7 +17,6 @@ import systems.lordes.server.repository.RestaurantRepository;
 import systems.lordes.server.utils.RestaurantSpecifications;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -67,7 +66,7 @@ public class RestaurantService {
     private void addPhotos(RestaurantEntity restaurantEntity, List<MultipartFile> photos) {
         if (photos == null || photos.isEmpty()) return;
 
-        List<String> photosUrl = new ArrayList<>(photos.size());
+        List<String> photosUrl = restaurantEntity.getPhotos();
 
         UUID restaurantId = restaurantEntity.getId();
 
@@ -100,6 +99,27 @@ public class RestaurantService {
         }
 
         restaurantEntity.setPhotos(photosUrl);
+    }
+
+    public boolean updateRestaurant(UUID id, Restaurant newRestaurant, List<MultipartFile> photos) {
+        RestaurantEntity oldRestaurant = restaurantRepository.findById(id).orElseGet(null);
+        if (oldRestaurant == null) {
+            return false;
+        }
+
+        oldRestaurant.setName(newRestaurant.getName());
+        oldRestaurant.setDescription(newRestaurant.getDescription());
+        oldRestaurant.setCharacteristics(newRestaurant.getCharacteristics());
+        oldRestaurant.setAddress(newRestaurant.getAddress());
+        oldRestaurant.setWorkingHours(newRestaurant.getWorkingHours());
+        oldRestaurant.setPhotos(newRestaurant.getPhotos());
+
+        if (photos != null && !photos.isEmpty()) {
+            addPhotos(oldRestaurant, photos);
+        }
+
+        restaurantRepository.save(oldRestaurant);
+        return true;
     }
 
     public boolean deleteRestaurant(UUID restaurantId) {
