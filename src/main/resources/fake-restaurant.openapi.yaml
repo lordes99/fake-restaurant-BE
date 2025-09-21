@@ -11,6 +11,8 @@ tags:
     description: Backend functions for user endpoints
   - name: Restaurant
     description: Backend functions for restaurant endpoints
+  - name: Review
+    description: Backend functions for review endpoints
   - name: Geo
     description: Backend functions for geo endpoints
 paths:
@@ -290,6 +292,35 @@ paths:
           $ref: '#/components/responses/Unauthorized_401'
         404:
           $ref: '#/components/responses/Not_Found_404'
+        500:
+          $ref: '#/components/responses/Internal_Server_Error_500'
+
+
+  /restaurants/{id}/reviews:
+    parameters:
+      - $ref: '#/components/parameters/UUIDParamPath'
+    post:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Review
+      operationId: ReviewsPost
+      summary: Create new review
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Review'
+      responses:
+        201:
+          description: the review uuid
+          content:
+            application/json:
+              schema:
+                type: string
+                format: uuid
+        401:
+          $ref: '#/components/responses/Unauthorized_401'
         500:
           $ref: '#/components/responses/Internal_Server_Error_500'
 
