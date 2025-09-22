@@ -158,6 +158,39 @@ paths:
         500:
           $ref: '#/components/responses/Internal_Server_Error_500'
 
+  /users/{id}/reviews:
+    parameters:
+      - $ref: '#/components/parameters/UUIDParamPath'
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Review
+      parameters:
+        - $ref: '#/components/parameters/PageQueryParam'
+        - $ref: '#/components/parameters/SizeQueryParam'
+      operationId: UserIdReviewsGet
+      summary: Get User reviews
+      responses:
+        200:
+          description: the user reviews
+          content:
+            application/json:
+              schema:
+                title: ReviewsPage
+                type: object
+                properties:
+                  content:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Review'
+                  page:
+                    $ref: "#/components/schemas/Page"
+        401:
+          $ref: '#/components/responses/Unauthorized_401'
+        500:
+          $ref: '#/components/responses/Internal_Server_Error_500'
+
   /restaurants:
     post:
       security:
@@ -294,7 +327,6 @@ paths:
           $ref: '#/components/responses/Not_Found_404'
         500:
           $ref: '#/components/responses/Internal_Server_Error_500'
-
 
   /restaurants/{id}/reviews:
     parameters:
