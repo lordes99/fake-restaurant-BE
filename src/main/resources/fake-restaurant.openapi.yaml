@@ -371,6 +371,26 @@ paths:
         500:
           $ref: '#/components/responses/Internal_Server_Error_500'
 
+  /reviews/{id}:
+    parameters:
+      - $ref: '#/components/parameters/UUIDParamPath'
+    delete:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Review
+      operationId: ReviewIdDelete
+      summary: Delete Review Data
+      responses:
+        204:
+          description: review deleted
+        401:
+          $ref: '#/components/responses/Unauthorized_401'
+        404:
+          $ref: '#/components/responses/Not_Found_404'
+        500:
+          $ref: '#/components/responses/Internal_Server_Error_500'
+
   /reverse-geocode:
     post:
       security:
