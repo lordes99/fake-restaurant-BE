@@ -391,6 +391,32 @@ paths:
         500:
           $ref: '#/components/responses/Internal_Server_Error_500'
 
+    put:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Review
+      operationId: ReviewIdPut
+      summary: vote on review
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VoteRequest'
+      responses:
+        200:
+          description: the vote uuid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UUIDReference'
+        401:
+          $ref: '#/components/responses/Unauthorized_401'
+        404:
+          $ref: '#/components/responses/Not_Found_404'
+        500:
+          $ref: '#/components/responses/Internal_Server_Error_500'
+
   /reverse-geocode:
     post:
       security:
@@ -720,6 +746,12 @@ components:
           $ref: "#/components/schemas/UUIDReference"
         ownerUser:
           $ref: "#/components/schemas/User"
+
+    VoteRequest:
+      type: object
+      properties:
+        voteType:
+          $ref: '#/components/schemas/VoteType'
 
     VoteType:
       type: string
