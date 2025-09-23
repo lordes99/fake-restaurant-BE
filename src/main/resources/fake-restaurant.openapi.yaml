@@ -177,15 +177,7 @@ paths:
           content:
             application/json:
               schema:
-                title: ReviewsPage
-                type: object
-                properties:
-                  content:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Review'
-                  page:
-                    $ref: "#/components/schemas/Page"
+                $ref: "#/components/schemas/ReviewsPage"
         401:
           $ref: '#/components/responses/Unauthorized_401'
         500:
@@ -325,6 +317,29 @@ paths:
           $ref: '#/components/responses/Unauthorized_401'
         404:
           $ref: '#/components/responses/Not_Found_404'
+        500:
+          $ref: '#/components/responses/Internal_Server_Error_500'
+
+  /public/restaurant/{id}/reviews:
+    parameters:
+      - $ref: '#/components/parameters/UUIDParamPath'
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Review
+      parameters:
+        - $ref: '#/components/parameters/PageQueryParam'
+        - $ref: '#/components/parameters/SizeQueryParam'
+      operationId: RestaurantIdReviewsGet
+      summary: Get Restaurant reviews
+      responses:
+        200:
+          description: the restaurant reviews
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReviewsPage"
         500:
           $ref: '#/components/responses/Internal_Server_Error_500'
 
@@ -911,3 +926,13 @@ components:
         - MultiLineString
         - Polygon
         - MultiPolygon
+
+    ReviewsPage:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Review'
+        page:
+          $ref: "#/components/schemas/Page"
