@@ -9,16 +9,12 @@ import systems.lordes.server.entity.RestaurantEntity;
 import systems.lordes.server.gen.api.Restaurant;
 import systems.lordes.server.gen.api.RestaurantsPage;
 
-import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
 import java.util.List;
 
 @Mapper(componentModel = "spring",
         unmappedSourcePolicy = ReportingPolicy.IGNORE,
         unmappedTargetPolicy = ReportingPolicy.ERROR,
-//        uses = {UserMapper.class, ReviewMapper.class}
-        uses = {UserMapper.class}
+        uses = {UserMapper.class, ReviewMapper.class}
 )
 public interface RestaurantMapper {
 
@@ -32,20 +28,6 @@ public interface RestaurantMapper {
     @Mapping(target = "reviews", ignore = true)
     @Mapping(target = "ownerUser.passwordHash", ignore = true)
     RestaurantEntity toEntity(Restaurant restaurant);
-
-    default OffsetDateTime map(Instant instant) {
-        if (instant == null) {
-            return null;
-        }
-        return OffsetDateTime.ofInstant(instant, ZoneId.systemDefault());
-    }
-
-    default Instant map(OffsetDateTime offsetDateTime) {
-        if (offsetDateTime == null) {
-            return null;
-        }
-        return offsetDateTime.toInstant();
-    }
 
     List<Restaurant> toApis(List<RestaurantEntity> restaurants);
 

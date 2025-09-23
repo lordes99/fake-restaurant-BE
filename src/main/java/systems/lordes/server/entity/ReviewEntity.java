@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import systems.lordes.server.gen.api.VoteType;
 
 import java.time.Instant;
 import java.util.List;
@@ -33,9 +32,11 @@ public class ReviewEntity {
     @Column(columnDefinition = "text[]")
     private List<String> photos;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private VoteType voteType;
+    @Column(columnDefinition = "text[]")
+    private List<String> upVoteIds;
+
+    @Column(columnDefinition = "text[]")
+    private List<String> downVoteIds;
 
     @CreatedDate
     @Column(columnDefinition= DBConstants.COLUMN_DEFINITION_TIMESTAMPZ)
@@ -45,7 +46,7 @@ public class ReviewEntity {
     @JoinColumn(name = "restaurant_id", nullable = false)
     private RestaurantEntity restaurant;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "owner_user_id", nullable = false)
     private UserEntity ownerUser;
 

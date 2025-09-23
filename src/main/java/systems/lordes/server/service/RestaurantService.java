@@ -122,8 +122,8 @@ public class RestaurantService {
         return true;
     }
 
-    public boolean deleteRestaurant(UUID restaurantId) {
-        if (this.restaurantRepository.existsById(restaurantId)) {
+    public boolean deleteRestaurant(UUID restaurantId, UUID ownerId) {
+        if (this.restaurantRepository.existsByIdAndOwnerUser_Id(restaurantId, ownerId)) {
             this.restaurantRepository.deleteById(restaurantId);
             return true;
         }

@@ -20,4 +20,5 @@ public interface RestaurantRepository extends JpaRepository<RestaurantEntity, UU
     """)
     Optional<RestaurantEntity> findByIdWithDetails(@Param("id") UUID id);
 
+    boolean existsByIdAndOwnerUser_Id(UUID id, UUID ownerUserId);
 }

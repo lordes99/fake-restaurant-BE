@@ -53,16 +53,6 @@ public class UserController implements UserApi {
         return ResponseEntity.ok(users);
     }
 
-//    @Override
-//    public ResponseEntity<UserSession> userSessionGet() {
-//        ControllerUtils.getPrincipal();
-//
-//        UserSession userSession = new UserSession();
-////        userSession.setUser();
-////        userSession.setPermissions();
-//        return ResponseEntity.ok(userSession);
-//    }
-
     @Override
     public ResponseEntity<User> userIdGet(UUID id) {
         User loggedUser = userMapper.toApi(ControllerUtils.getPrincipalSession());
