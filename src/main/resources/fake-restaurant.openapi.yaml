@@ -702,8 +702,14 @@ components:
           type: string
         description:
           type: string
-        vote:
-          $ref: "#/components/schemas/VoteType"
+        upVoteIds:
+          type: array
+          items:
+            type: string
+        downVoteIds:
+          type: array
+          items:
+            type: string
         createdAt:
           type: string
           format: date-time
