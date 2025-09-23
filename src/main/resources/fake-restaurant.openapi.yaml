@@ -455,102 +455,6 @@ paths:
         500:
           $ref: '#/components/responses/Internal_Server_Error_500'
 
-#  /restaurants/{id}/upload-photo:
-#    post:
-#      parameters:
-#        - $ref: '#/components/parameters/UUIDParamPath'
-#      security:
-#        - bearerAuth: [ ]
-#      tags:
-#        - Restaurant
-#      operationId: RestaurantsIdUploadPhotoPost
-#      summary: Add photos in restaurant
-#      requestBody:
-#        content:
-#          multipart/form-data:
-#            schema:
-#              type: object
-#              properties:
-#                files:
-#                  type: array
-#                  items:
-#                    type: string
-#                    format: binary
-#              required:
-#                - file
-#      responses:
-#        200:
-#          description: the entity
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/Project'
-#    post:
-#      security:
-#        - bearerAuth: [ ]
-#      tags:
-#        - Project
-#      operationId: ProjectIdPost
-#      summary: Modify Project
-#      requestBody:
-#        content:
-#          application/json:
-#            schema:
-#              $ref: '#/components/schemas/Project'
-#      responses:
-#        200:
-#          description: the user uuid
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/Project'
-
-#  /AISystems:
-#    parameters:
-#      - $ref: '#/components/parameters/ProjectIdParam'
-#    post:
-#      security:
-#        - bearerAuth: [ ]
-#      tags:
-#        - Project
-#      operationId: AISystemsPost
-#      summary: Create new AISystem
-#      requestBody:
-#        content:
-#          application/json:
-#            schema:
-#              $ref: '#/components/schemas/AISystem'
-#      responses:
-#        201:
-#          description: the entity uuid
-#          content:
-#            application/json:
-#              schema:
-#                type: string
-#                format: uuid
-#    get:
-#      tags:
-#        - Project
-#      parameters:
-#        - $ref: '#/components/parameters/PageQueryParam'
-#        - $ref: '#/components/parameters/SizeQueryParam'
-#      responses:
-#        '200':
-#          description: Successful operation
-#          content:
-#            application/json:
-#              schema:
-#                title: AISystemPage
-#                type: object
-#                properties:
-#                  uris:
-#                    type: array
-#                    items:
-#                      type: string
-#                      format: uri
-#        401:
-#          $ref: '#/components/responses/Unauthorized_401'
-
 components:
   responses:
     Unauthorized_401:
@@ -609,8 +513,6 @@ components:
       schema:
         type: string
         format: uuid
-
-
 
   schemas:
     Page:
@@ -790,8 +692,8 @@ components:
             type: string
         restaurantId:
           $ref: "#/components/schemas/UUIDReference"
-        ownerUserId:
-          $ref: "#/components/schemas/UUIDReference"
+        ownerUser:
+          $ref: "#/components/schemas/User"
 
     VoteType:
       type: string
