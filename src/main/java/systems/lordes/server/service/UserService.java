@@ -21,66 +21,20 @@ import java.util.UUID;
 
 @Service
 public class UserService {
-
-//    private static final String LOCATION_HEADER = "Location";
-//    private final KeycloakRealm keycloakRealm;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-//    public UserService(KeycloakRealm keycloakRealm, UserRepository userRepository, OrganizationRepository organizationRepository, UserMapper userMapper) {
     public UserService(
             UserRepository userRepository,
-//            RestaurantRepository organizationRepository,
-//            UserMapper3 userMapper3,
             UserMapper userMapper,
             PasswordEncoder passwordEncoder
     ) {
-//        this.keycloakRealm = keycloakRealm;
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
     }
-
-
-
-
-//    public String createKeycloakUser(String name, String surname, String email) {
-//        UsersResource usersResource = keycloakRealm.getUsersResource();
-//        final List<UserRepresentation> userRepresentations = usersResource
-//                    .searchByEmail(email, true);
-//
-//        // KC user already exists for given email
-//        if(userRepresentations != null && !userRepresentations.isEmpty()) {
-//            // NOTE: should never happen
-//            if(userRepresentations.size() != 1) {
-//                throw new RuntimeException("Multiple KC users share the same e-mail!");
-//            }
-//
-//            return userRepresentations.get(0).getId();
-//        } else {
-//            final UserRepresentation userRepresentation = new UserRepresentation();
-//
-//            userRepresentation.setUsername(email);
-//            userRepresentation.setFirstName(name);
-//            userRepresentation.setLastName(surname);
-//            userRepresentation.setEmail(email);
-//            userRepresentation.setEnabled(true);
-//            userRepresentation.setEmailVerified(true);
-//
-//            try(Response response = usersResource.create(userRepresentation)) {
-//                if(response.getStatus() == HttpStatus.CREATED.value()) {
-//                    // NOTE: retrieves the created userId without having to perform another API call to find the user by email
-//                    final String location = response.getHeaderString(LOCATION_HEADER);
-//
-//                    return location.substring(location.lastIndexOf("/") + 1);
-//                } else {
-//                    throw new RuntimeException("Couldn't create KC user for email=" + email);
-//                }
-//            }
-//        }
-//    }
 
     @Transactional(readOnly = true)
     public List<UserData> findUsers() {
@@ -131,8 +85,12 @@ public class UserService {
         return userMapper.toData(userRepository.save(userEntity));
     }
 
-    public boolean checkPassword(String rawPassword, String storedHash) {
-        return passwordEncoder.matches(rawPassword, storedHash);
+    public boolean deleteUser(UUID id) {
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
     private void mergeUserEntity(UserEntity source, UserEntity target) {

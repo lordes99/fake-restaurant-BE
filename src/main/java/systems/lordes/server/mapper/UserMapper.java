@@ -48,6 +48,7 @@ public interface UserMapper {
 //    @Mapping(target = "updatedAt", source = "updatedAt")
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "reviews", ignore = true)
     UserEntity toEntity(User user);
 
 //    List<UserEntity> toEntities(List<User> users);

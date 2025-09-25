@@ -27,6 +27,7 @@ public interface RestaurantMapper {
     @Mapping(target = "version", ignore = true)
     @Mapping(target = "reviews", ignore = true)
     @Mapping(target = "ownerUser.passwordHash", ignore = true)
+    @Mapping(target = "ownerUser.reviews", ignore = true)
     RestaurantEntity toEntity(Restaurant restaurant);
 
     List<Restaurant> toApis(List<RestaurantEntity> restaurants);

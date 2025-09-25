@@ -51,8 +51,11 @@ public class UserEntity {
     @Column(columnDefinition= DBConstants.COLUMN_DEFINITION_TIMESTAMPZ)
     private Instant updatedAt;
 
-    @OneToMany(mappedBy = "ownerUser")
+    @OneToMany(mappedBy = "ownerUser", cascade = CascadeType.REMOVE)
     private List<RestaurantEntity> restaurants;
+
+    @OneToMany(mappedBy = "ownerUser", cascade = CascadeType.REMOVE)
+    private List<ReviewEntity> reviews;
 
     @Version
     private Long version;

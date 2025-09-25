@@ -29,6 +29,7 @@ public interface ReviewMapper {
     @Mapping(target = "ownerUser.version", ignore = true)
     @Mapping(target = "version", ignore = true)
     @Mapping(target = "ownerUser.passwordHash", ignore = true)
+    @Mapping(target = "ownerUser.reviews", ignore = true)
     @Mapping(target = "restaurant", ignore = true) //ToDo: da rimuovere
     ReviewEntity toEntity(Review review);
 

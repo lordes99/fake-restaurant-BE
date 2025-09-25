@@ -15,7 +15,6 @@ import systems.lordes.server.mapper.UserMapper;
 import systems.lordes.server.service.UserService;
 import systems.lordes.server.utils.ControllerUtils;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -51,6 +50,23 @@ public class UserController implements UserApi {
         PageRequest pageRequest = ControllerUtils.pageOf(page - 1, size);
         users = userMapper.toApis(userService.findUsers(pageRequest, search));
         return ResponseEntity.ok(users);
+    }
+
+    @Override
+    public ResponseEntity<Void> userIdDelete(UUID id) {
+        User loggedUser = userMapper.toApi(ControllerUtils.getPrincipalSession());
+        if (!loggedUser.getId().equals(id) && !Role.ADMIN.equals(loggedUser.getRole())) {
+            Error error = new Error().message("Access denied: unauthorized user");
+            return (ResponseEntity) ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+        }
+
+        if (userService.deleteUser(id)) {
+            return ResponseEntity.noContent().build();
+        } else {
+            String message = String.format("Not found: user with id: %s not found", id.toString());
+            Error error = new Error().message(message);
+            return (ResponseEntity) ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        }
     }
 
     @Override
