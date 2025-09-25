@@ -83,7 +83,8 @@ public class ReviewController implements ReviewApi {
         if (reviewService.deleteReview(reviewId, loggedUser.getId())) {
             return ResponseEntity.noContent().build();
         } else {
-            Error error = new Error().message("Not found: restaurant not found");
+            String message = String.format("Not found: review with id: %s not found", reviewId.toString());
+            Error error = new Error().message(message);
             return (ResponseEntity) ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
         }
     }
