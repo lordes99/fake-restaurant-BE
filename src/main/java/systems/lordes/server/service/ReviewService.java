@@ -43,7 +43,7 @@ public class ReviewService {
 
     @Transactional(readOnly = true)
     public ReviewsPageData findReviewsByRestaurantId(UUID restaurantId, PageRequest pageRequest) {
-        return reviewMapper.toData(reviewRepository.findAllByRestaurant_Id(restaurantId, pageRequest));
+        return reviewMapper.toData(reviewRepository.findAllByRestaurantSorted(restaurantId, pageRequest));
     }
 
     @Transactional(readOnly = true)
