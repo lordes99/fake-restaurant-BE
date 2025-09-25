@@ -157,6 +157,22 @@ paths:
           $ref: '#/components/responses/Not_Found_404'
         500:
           $ref: '#/components/responses/Internal_Server_Error_500'
+    delete:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - User
+      operationId: UserIdDelete
+      summary: Delete User Data
+      responses:
+        204:
+          description: user deleted
+        401:
+          $ref: '#/components/responses/Unauthorized_401'
+        404:
+          $ref: '#/components/responses/Not_Found_404'
+        500:
+          $ref: '#/components/responses/Internal_Server_Error_500'
 
   /users/{id}/reviews:
     parameters:
