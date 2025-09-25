@@ -16,7 +16,8 @@ public class RestaurantSpecifications {
 
             String likeSearch = "%" + search.toLowerCase() + "%";
             return cb.or(
-                cb.like(cb.lower(root.get("name")), likeSearch)
+                cb.like(cb.lower(root.get("name")), likeSearch),
+                cb.like(cb.lower(root.get("description")), likeSearch)
             );
         };
     }
