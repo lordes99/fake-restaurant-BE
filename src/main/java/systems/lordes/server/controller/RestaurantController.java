@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import systems.lordes.server.data.CustomUserDetails;
+import systems.lordes.server.data.UserRole;
 import systems.lordes.server.entity.UserEntity;
 import systems.lordes.server.gen.api.Error;
 import systems.lordes.server.gen.api.Restaurant;
@@ -111,5 +112,25 @@ public class RestaurantController implements RestaurantApi {
         UUID restaurantId = restaurantService.createRestaurant(restaurant, photos, loggedUser);
 
         return ResponseEntity.ok(restaurantId);
+    }
+
+    @Override
+    public ResponseEntity<RestaurantsPage> userIdRestaurantsGet(UUID userId, Integer page, Integer size) {
+        UserEntity loggedUser = ControllerUtils.getPrincipalSession().getUser();
+        if (loggedUser != null && (loggedUser.getId().equals(userId) || UserRole.ADMIN.equals(loggedUser.getRole()))) {
+            RestaurantsPage restaurants;
+            if (page == null || size == null) {
+                systems.lordes.server.gen.api.Error error = new Error().message("Filter Error: page or size is null");
+                return (ResponseEntity) ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+            }
+
+            PageRequest pageRequest = ControllerUtils.pageOf(page - 1, size);
+            restaurants = restaurantMapper.toApis(restaurantService.findRestaurantsByOwnerId(userId, pageRequest));
+
+            return ResponseEntity.ok(restaurants);
+        } else {
+            Error error = new Error().message("Access denied: unauthorized user");
+            return (ResponseEntity) ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+        }
     }
 }

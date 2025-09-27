@@ -142,6 +142,11 @@ public class RestaurantService {
         return false;
     }
 
+    @Transactional(readOnly = true)
+    public RestaurantsPageData findRestaurantsByOwnerId(UUID ownerId, PageRequest pageRequest) {
+        return restaurantMapper.toData(restaurantRepository.findAllByOwnerUser_Id(ownerId, pageRequest));
+    }
+
     private Resource toResource(MultipartFile file) throws IOException {
         return new ByteArrayResource(file.getBytes()) {
             @Override

@@ -1,5 +1,7 @@
 package systems.lordes.server.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -21,4 +23,6 @@ public interface RestaurantRepository extends JpaRepository<RestaurantEntity, UU
     Optional<RestaurantEntity> findByIdWithDetails(@Param("id") UUID id);
 
     boolean existsByIdAndOwnerUser_Id(UUID id, UUID ownerUserId);
+
+    Page<RestaurantEntity> findAllByOwnerUser_Id(UUID ownerId, Pageable pageable);
 }
