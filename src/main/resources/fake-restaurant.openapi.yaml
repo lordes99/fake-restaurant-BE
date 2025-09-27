@@ -671,10 +671,10 @@ components:
       properties:
         open:
           type: string
-          format: date-time
+          format: time
         close:
           type: string
-          format: date-time
+          format: time
 
     DayType:
       type: string

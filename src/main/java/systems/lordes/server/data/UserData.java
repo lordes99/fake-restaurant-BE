@@ -1,9 +1,9 @@
 package systems.lordes.server.data;
 
 import lombok.Data;
-import systems.lordes.server.gen.api.InstantDateTimeRO;
 import systems.lordes.server.gen.api.Role;
 
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Data
@@ -14,6 +14,6 @@ public class UserData {
     private String email;
     private Role role;
     private String password;
-    private InstantDateTimeRO createdAt;
-    private InstantDateTimeRO updatedAt;
+    private OffsetDateTime createdAt;
+    private OffsetDateTime updatedAt;
 }
