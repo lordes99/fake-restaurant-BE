@@ -199,6 +199,31 @@ paths:
         500:
           $ref: '#/components/responses/Internal_Server_Error_500'
 
+  /users/{id}/restaurants:
+    parameters:
+      - $ref: '#/components/parameters/UUIDParamPath'
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Restaurant
+      parameters:
+        - $ref: '#/components/parameters/PageQueryParam'
+        - $ref: '#/components/parameters/SizeQueryParam'
+      operationId: UserIdRestaurantsGet
+      summary: Get User restaurants
+      responses:
+        200:
+          description: the user restaurants
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RestaurantsPage"
+        401:
+          $ref: '#/components/responses/Unauthorized_401'
+        500:
+          $ref: '#/components/responses/Internal_Server_Error_500'
+
   /restaurants:
     post:
       security:
@@ -248,15 +273,7 @@ paths:
           content:
             application/json:
               schema:
-                title: RestaurantsPage
-                type: object
-                properties:
-                  content:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Restaurant"
-                  page:
-                    $ref: "#/components/schemas/Page"
+                $ref: "#/components/schemas/RestaurantsPage"
         500:
           $ref: '#/components/responses/Internal_Server_Error_500'
 
@@ -910,5 +927,15 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Review'
+        page:
+          $ref: "#/components/schemas/Page"
+
+    RestaurantsPage:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/Restaurant"
         page:
           $ref: "#/components/schemas/Page"
