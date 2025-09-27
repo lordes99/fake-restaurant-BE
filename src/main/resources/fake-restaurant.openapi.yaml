@@ -775,8 +775,8 @@ components:
         photos:
           items:
             type: string
-        restaurantId:
-          $ref: "#/components/schemas/UUIDReference"
+        restaurant:
+          $ref: "#/components/schemas/Restaurant"
         ownerUser:
           $ref: "#/components/schemas/User"
 
