@@ -9,12 +9,15 @@ import systems.lordes.server.entity.RestaurantEntity;
 import systems.lordes.server.gen.api.Restaurant;
 import systems.lordes.server.gen.api.RestaurantsPage;
 
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @Mapper(componentModel = "spring",
         unmappedSourcePolicy = ReportingPolicy.IGNORE,
         unmappedTargetPolicy = ReportingPolicy.ERROR,
-        uses = {UserMapper.class, ReviewMapper.class}
+        uses = {UserMapper.class}
 )
 public interface RestaurantMapper {
 
@@ -47,4 +50,18 @@ public interface RestaurantMapper {
 
     @Mapping(target = "content", source = "restaurants")
     RestaurantsPage toApis(RestaurantsPageData restaurants);
+
+    default OffsetDateTime map(Instant instant) {
+        if (instant == null) {
+            return null;
+        }
+        return OffsetDateTime.ofInstant(instant, ZoneId.systemDefault());
+    }
+
+    default Instant map(OffsetDateTime offsetDateTime) {
+        if (offsetDateTime == null) {
+            return null;
+        }
+        return offsetDateTime.toInstant();
+    }
 }

@@ -42,7 +42,7 @@ public class ReviewEntity {
     @Column(columnDefinition= DBConstants.COLUMN_DEFINITION_TIMESTAMPZ)
     private Instant createdAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "restaurant_id", nullable = false)
     private RestaurantEntity restaurant;
 

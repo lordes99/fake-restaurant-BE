@@ -9,20 +9,17 @@ import systems.lordes.server.entity.ReviewEntity;
 import systems.lordes.server.gen.api.Review;
 import systems.lordes.server.gen.api.ReviewsPage;
 
-import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
 import java.util.List;
 
 @Mapper(componentModel = "spring",
         unmappedSourcePolicy = ReportingPolicy.IGNORE,
         unmappedTargetPolicy = ReportingPolicy.ERROR,
-        uses = {UserMapper.class}
+        uses = {UserMapper.class, RestaurantMapper.class}
 )
 public interface ReviewMapper {
 
     @Mapping(target = "ownerUser.password", ignore = true)
-    @Mapping(target = "restaurantId", ignore = true) //ToDo: da rimuovere
+//    @Mapping(target = "restaurant", ignore = true) //ToDo: da rimuovere
     Review toApi(ReviewEntity reviewEntity);
 
     @Mapping(target = "ownerUser.restaurants", ignore = true)
@@ -46,20 +43,6 @@ public interface ReviewMapper {
         reviewsPageData.setPage(page);
 
         return reviewsPageData;
-    }
-
-    default OffsetDateTime map(Instant instant) {
-        if (instant == null) {
-            return null;
-        }
-        return OffsetDateTime.ofInstant(instant, ZoneId.systemDefault());
-    }
-
-    default Instant map(OffsetDateTime offsetDateTime) {
-        if (offsetDateTime == null) {
-            return null;
-        }
-        return offsetDateTime.toInstant();
     }
 
     @Mapping(target = "content", source = "reviews")
