@@ -1,5 +1,6 @@
 package systems.lordes.server.service;
 
+import io.minio.errors.*;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +18,8 @@ import systems.lordes.server.repository.RestaurantRepository;
 import systems.lordes.server.utils.RestaurantSpecifications;
 
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -124,7 +127,16 @@ public class RestaurantService {
 
     public boolean deleteRestaurant(UUID restaurantId, UUID ownerId) {
         if (this.restaurantRepository.existsByIdAndOwnerUser_Id(restaurantId, ownerId)) {
-            this.restaurantRepository.deleteById(restaurantId);
+            try {
+                String bucket = storageService.getDefaultBucket();
+                String path = MINIO_BUCKET_PUBLIC + "/" + MINIO_BUCKET_RESTAURANTS + "/" + restaurantId;
+                this.storageService.storageDelete(bucket, path, null);
+                this.restaurantRepository.deleteById(restaurantId);
+            } catch (ServerException | InsufficientDataException | ErrorResponseException | IOException |
+                     NoSuchAlgorithmException | InvalidKeyException | InvalidResponseException | XmlParserException |
+                     InternalException e) {
+                throw new RuntimeException(e);
+            }
             return true;
         }
         return false;

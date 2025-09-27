@@ -1,16 +1,14 @@
 package systems.lordes.server.service;
 
-import io.minio.*;
-import jakarta.validation.constraints.NotNull;
-import systems.lordes.server.config.MinioConfig;
-import systems.lordes.server.data.BucketS3Url;
-import systems.lordes.server.exception.BadRequestException;
 import com.google.common.base.Strings;
 import com.google.common.collect.Multimap;
-import io.minio.errors.ErrorResponseException;
+import io.minio.*;
+import io.minio.errors.*;
 import io.minio.http.Method;
+import io.minio.messages.Item;
 import jakarta.annotation.Nullable;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.constraints.NotNull;
 import kotlin.Pair;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -20,9 +18,15 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import systems.lordes.server.config.MinioConfig;
+import systems.lordes.server.data.BucketS3Url;
+import systems.lordes.server.exception.BadRequestException;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -225,7 +229,24 @@ public class StorageService {
         return new PresignedURL(presignedObjectUrl, now.plus(expireInMins, ChronoUnit.MINUTES));
     }
 
-    public void storageDelete(BucketS3Url bucketResource) {
+    public void storageDelete(String bucket, String path, String fileName) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+        if (fileName != null) {
+            storageDelete(new BucketS3Url(bucket, path));
+        } else {
+            Iterable<Result<Item>> filesToDelete = minioClient.listObjects(ListObjectsArgs.builder()
+                    .bucket(bucket)
+                    .prefix(path)
+                    .recursive(true)
+                    .build());
+
+            for (Result<Item> file : filesToDelete) {
+                storageDelete(new BucketS3Url(bucket, file.get().objectName()));
+            }
+
+        }
+    }
+
+    private void storageDelete(BucketS3Url bucketResource) {
         try {
             minioClient.removeObject(RemoveObjectArgs.builder()
                     .bucket(bucketResource.bucket()).object(bucketResource.path()).build());
