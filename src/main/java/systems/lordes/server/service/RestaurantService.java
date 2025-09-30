@@ -13,6 +13,7 @@ import systems.lordes.server.data.RestaurantsPageData;
 import systems.lordes.server.entity.RestaurantEntity;
 import systems.lordes.server.entity.UserEntity;
 import systems.lordes.server.gen.api.Restaurant;
+import systems.lordes.server.gen.api.RestaurantCharacteristic;
 import systems.lordes.server.mapper.RestaurantMapper;
 import systems.lordes.server.repository.RestaurantRepository;
 import systems.lordes.server.utils.RestaurantSpecifications;
@@ -56,8 +57,10 @@ public class RestaurantService {
     }
 
     @Transactional(readOnly = true)
-    public RestaurantsPageData findRestaurants(PageRequest pageRequest, String search) {
-        Specification<RestaurantEntity> spec = RestaurantSpecifications.searchByKeyword(search);
+    public RestaurantsPageData findRestaurants(PageRequest pageRequest, String search, List<RestaurantCharacteristic> filters) {
+        Specification<RestaurantEntity> spec = Specification
+                .where(RestaurantSpecifications.searchByKeyword(search))
+                .and(RestaurantSpecifications.hasCharacteristics(filters));
         return restaurantMapper.toData(restaurantRepository.findAll(spec, pageRequest));
     }
 

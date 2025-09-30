@@ -13,6 +13,7 @@ import systems.lordes.server.data.UserRole;
 import systems.lordes.server.entity.UserEntity;
 import systems.lordes.server.gen.api.Error;
 import systems.lordes.server.gen.api.Restaurant;
+import systems.lordes.server.gen.api.RestaurantCharacteristic;
 import systems.lordes.server.gen.api.RestaurantsPage;
 import systems.lordes.server.gen.controller.RestaurantApi;
 import systems.lordes.server.mapper.RestaurantMapper;
@@ -87,7 +88,7 @@ public class RestaurantController implements RestaurantApi {
     }
 
     @Override
-    public ResponseEntity<RestaurantsPage> restaurantsGet(Integer page, Integer size, String search) {
+    public ResponseEntity<RestaurantsPage> restaurantsGet(Integer page, Integer size, String search, List<RestaurantCharacteristic> filters) {
 
         RestaurantsPage restaurants;
         if (page == null || size == null) {
@@ -96,7 +97,7 @@ public class RestaurantController implements RestaurantApi {
         }
 
         PageRequest pageRequest = ControllerUtils.pageOf(page - 1, size);
-        restaurants = restaurantMapper.toApis(restaurantService.findRestaurants(pageRequest, search));
+        restaurants = restaurantMapper.toApis(restaurantService.findRestaurants(pageRequest, search, filters));
         return ResponseEntity.ok(restaurants);
     }
 
