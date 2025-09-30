@@ -591,7 +591,9 @@ components:
       required: false
       name: filter
       schema:
-        $ref: '#/components/schemas/RestaurantCharacteristic'
+        type: array
+        items:
+          $ref: '#/components/schemas/RestaurantCharacteristic'
       description: |
         Filter characteristic to filter in element.
 
