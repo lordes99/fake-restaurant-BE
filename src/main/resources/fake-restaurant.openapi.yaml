@@ -266,6 +266,7 @@ paths:
         - $ref: '#/components/parameters/PageQueryParam'
         - $ref: '#/components/parameters/SizeQueryParam'
         - $ref: '#/components/parameters/SearchQueryParam'
+        - $ref: '#/components/parameters/FilterCharacteristicQueryParam'
       operationId: RestaurantsGet
       responses:
         '200':
@@ -584,6 +585,15 @@ components:
         type: string
       description: |
         Search keyword to search in element.
+
+    FilterCharacteristicQueryParam:
+      in: query
+      required: false
+      name: filter
+      schema:
+        $ref: '#/components/schemas/RestaurantCharacteristic'
+      description: |
+        Filter characteristic to filter in element.
 
     UUIDParamPath:
       in: path
