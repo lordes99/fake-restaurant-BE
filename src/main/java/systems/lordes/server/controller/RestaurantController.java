@@ -43,7 +43,7 @@ public class RestaurantController implements RestaurantApi {
     @Override
     public ResponseEntity<Void> restaurantIdDelete(UUID id) {
         UserEntity loggedUser = ControllerUtils.getPrincipalSession().getUser();
-        if (restaurantService.deleteRestaurant(id, loggedUser.getId())) {
+        if (restaurantService.deleteRestaurant(id, loggedUser.getId(), ControllerUtils.isAdmin())) {
             return ResponseEntity.noContent().build();
         } else {
             Error error = new Error().message("Not found: restaurant not found");

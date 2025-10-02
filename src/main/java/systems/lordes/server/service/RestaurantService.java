@@ -128,8 +128,11 @@ public class RestaurantService {
         return true;
     }
 
-    public boolean deleteRestaurant(UUID restaurantId, UUID ownerId) {
-        if (this.restaurantRepository.existsByIdAndOwnerUser_Id(restaurantId, ownerId)) {
+    public boolean deleteRestaurant(UUID restaurantId, UUID ownerId, boolean isAdmin) {
+        if (
+            (isAdmin && this.restaurantRepository.existsById(restaurantId)) ||
+            (!isAdmin && this.restaurantRepository.existsByIdAndOwnerUser_Id(restaurantId, ownerId))
+        ) {
             try {
                 String bucket = storageService.getDefaultBucket();
                 String path = MINIO_BUCKET_PUBLIC + "/" + MINIO_BUCKET_RESTAURANTS + "/" + restaurantId;

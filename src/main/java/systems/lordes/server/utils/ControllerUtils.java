@@ -4,6 +4,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import systems.lordes.server.data.CustomUserDetails;
+import systems.lordes.server.data.UserRole;
 
 public class ControllerUtils {
 
@@ -14,6 +15,10 @@ public class ControllerUtils {
 
     public static CustomUserDetails getPrincipalSession() {
         return (CustomUserDetails) getPrincipal().getPrincipal();
+    }
+
+    public static boolean isAdmin() {
+        return getPrincipalSession().getRole().equals(UserRole.ADMIN);
     }
 
     public static Authentication getPrincipal() {
