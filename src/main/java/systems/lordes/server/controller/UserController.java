@@ -47,7 +47,7 @@ public class UserController implements UserApi {
             return (ResponseEntity) ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
         }
 
-        PageRequest pageRequest = ControllerUtils.pageOf(page - 1, size);
+        PageRequest pageRequest = ControllerUtils.pageOf(page - 1, size, null);
         users = userMapper.toApis(userService.findUsers(pageRequest, search));
         return ResponseEntity.ok(users);
     }

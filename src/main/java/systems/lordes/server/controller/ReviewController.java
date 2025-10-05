@@ -53,7 +53,7 @@ public class ReviewController implements ReviewApi {
                 return (ResponseEntity) ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
             }
 
-            PageRequest pageRequest = ControllerUtils.pageOf(page - 1, size);
+            PageRequest pageRequest = ControllerUtils.pageOf(page - 1, size, null);
             reviews = reviewMapper.toApis(reviewService.findReviewsByOwnerId(userId, pageRequest));
 
             return ResponseEntity.ok(reviews);
@@ -71,7 +71,7 @@ public class ReviewController implements ReviewApi {
             return (ResponseEntity) ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
         }
 
-        PageRequest pageRequest = ControllerUtils.pageOf(page - 1, size);
+        PageRequest pageRequest = ControllerUtils.pageOf(page - 1, size, null);
         reviews = reviewMapper.toApis(reviewService.findReviewsByRestaurantId(restaurantId, pageRequest));
         return ResponseEntity.ok(reviews);
     }

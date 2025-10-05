@@ -1,6 +1,7 @@
 package systems.lordes.server.utils;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import systems.lordes.server.data.CustomUserDetails;
@@ -25,7 +26,7 @@ public class ControllerUtils {
         return SecurityContextHolder.getContext().getAuthentication();
     }
 
-    public static PageRequest pageOf(Integer page, Integer size) {
+    public static PageRequest pageOf(Integer page, Integer size, Sort sort) {
         if (page == null) {
             page = FIRST_PAGE;
         } else if (page < FIRST_PAGE) {
@@ -37,6 +38,10 @@ public class ControllerUtils {
             size = MAX_PAGE_SIZE;
         } if (size <= 0) {
             throw new IllegalArgumentException("size must be greater than or equal to 0");
+        }
+
+        if (sort != null) {
+            return PageRequest.of(page, size, sort);
         }
 
         return PageRequest.of(page, size);

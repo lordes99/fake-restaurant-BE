@@ -3,6 +3,7 @@ package systems.lordes.server.controller;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -96,7 +97,7 @@ public class RestaurantController implements RestaurantApi {
             return (ResponseEntity) ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
         }
 
-        PageRequest pageRequest = ControllerUtils.pageOf(page - 1, size);
+        PageRequest pageRequest = ControllerUtils.pageOf(page - 1, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         restaurants = restaurantMapper.toApis(restaurantService.findRestaurants(pageRequest, search, filters));
         return ResponseEntity.ok(restaurants);
     }
@@ -125,7 +126,7 @@ public class RestaurantController implements RestaurantApi {
                 return (ResponseEntity) ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
             }
 
-            PageRequest pageRequest = ControllerUtils.pageOf(page - 1, size);
+            PageRequest pageRequest = ControllerUtils.pageOf(page - 1, size, null);
             restaurants = restaurantMapper.toApis(restaurantService.findRestaurantsByOwnerId(userId, pageRequest));
 
             return ResponseEntity.ok(restaurants);
