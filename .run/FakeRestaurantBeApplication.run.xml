@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="FakeRestaurantBeApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+    <envs>
+      <env name="spring.config.additional-location" value="./secrets/" />
+      <env name="debug" value="true" />
+    </envs>
+    <module name="fake-restaurant-BE.main" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="systems.lordes.server.FakeRestaurantBeApplication" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
