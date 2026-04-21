@@ -1,14 +1,20 @@
 -- Drop foreign keys e indice univoco
-ALTER TABLE vote_entities DROP CONSTRAINT fk_vote_review;
-ALTER TABLE vote_entities DROP CONSTRAINT fk_vote_user;
+ALTER TABLE vote_entities DROP CONSTRAINT IF EXISTS fk_vote_review;
+ALTER TABLE vote_entities DROP CONSTRAINT IF EXISTS fk_vote_user;
 DROP INDEX IF EXISTS uq_vote_user_review;
 
 -- Drop tabella vote_entities
 DROP TABLE IF EXISTS vote_entities;
 
+-- Rename user_id to owner_user_id
+ALTER TABLE review_entities
+    RENAME COLUMN user_id TO owner_user_id;
+
 -- Aggiungi colonne mancanti
 ALTER TABLE review_entities
-    ADD COLUMN photos text[];
+    ADD COLUMN photos text[],
+    ADD COLUMN title VARCHAR(511),
+    ADD COLUMN description VARCHAR(1027);
 
 -- Aggiungi colonna vote_type
 ALTER TABLE review_entities
